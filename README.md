@@ -61,4 +61,46 @@ rover -lz /tf/caf/landingzones/launchpad -a destroy -launchpad
 ```
 
 <!--- BEGIN_TF_DOCS --->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.13 |
+| azurecaf | ~>0.4.3 |
+| azurerm | ~>2.19.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| terraform | n/a |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| aml\_configs | (Required) Machine learning Configuration objects | `any` | n/a | yes |
+| datalake\_configs | (Required) Data Lake Configuration objects | `any` | n/a | yes |
+| lowerlevel\_container\_name | n/a | `any` | n/a | yes |
+| lowerlevel\_key | n/a | `any` | n/a | yes |
+| lowerlevel\_resource\_group\_name | n/a | `any` | n/a | yes |
+| lowerlevel\_storage\_account\_name | Map of the remote data state | `any` | n/a | yes |
+| synapse\_configs | (Required) Synapse Configuration objects | `any` | n/a | yes |
+| tags | (Optional) Tags for the landing zone | `map` | <pre>{<br>  "environment": "DEV",<br>  "project": "my_analytics_project"<br>}</pre> | no |
+| tfstate\_landingzone\_caf\_foundations | (Optional) Name of the Terraform state for the caf foundations landing zone | `string` | `"landingzone_caf_foundations.tfstate"` | no |
+| tfstate\_landingzone\_networking | (Optional) Name of the Terraform state for the networking landing zone | `string` | `"landingzone_networking.tfstate"` | no |
+| vm\_configs | (Required) Virtual Machine Configuration objects | `any` | n/a | yes |
+| workspace | n/a | `any` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| dap\_aml\_workspace | Full output of the Azure Machine learning objects |
+| dap\_synapse\_workspace | Full output of the Synapse objects |
+| datalake\_storage | Full output of the data lake storage objects |
+| landingzone\_caf\_foundations\_accounting | Full output of the accounting settings |
+| landingzone\_caf\_foundations\_global\_settings | Full output of the global settings object |
+| prefix | Prefix |
+
 <!--- END_TF_DOCS --->
