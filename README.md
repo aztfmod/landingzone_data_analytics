@@ -78,7 +78,7 @@ Have fun playing with the landing zone and once you are done, you can simply del
 |------|---------|
 | terraform | >= 0.13 |
 | azurecaf | ~>0.4.3 |
-| azurerm | ~>2.19.0 |
+| azurerm | ~>2.20.0 |
 
 ## Providers
 
@@ -90,17 +90,18 @@ Have fun playing with the landing zone and once you are done, you can simply del
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| aml\_configs | (Required) Machine learning Configuration objects | `any` | n/a | yes |
-| datalake\_configs | (Required) Data Lake Configuration objects | `any` | n/a | yes |
+| aml\_configs | (Required) Machine learning Configuration objects | `map` | `{}` | no |
+| datalake\_configs | (Required) Data Lake Configuration objects | `map` | `{}` | no |
+| landingzone\_tag | n/a | `any` | n/a | yes |
 | lowerlevel\_container\_name | n/a | `any` | n/a | yes |
 | lowerlevel\_key | n/a | `any` | n/a | yes |
 | lowerlevel\_resource\_group\_name | n/a | `any` | n/a | yes |
 | lowerlevel\_storage\_account\_name | Map of the remote data state | `any` | n/a | yes |
-| synapse\_configs | (Required) Synapse Configuration objects | `any` | n/a | yes |
+| synapse\_configs | (Required) Synapse Configuration objects | `map` | `{}` | no |
 | tags | (Optional) Tags for the landing zone | `map` | <pre>{<br>  "environment": "DEV",<br>  "project": "my_analytics_project"<br>}</pre> | no |
 | tfstate\_landingzone\_caf\_foundations | (Optional) Name of the Terraform state for the caf foundations landing zone | `string` | `"landingzone_caf_foundations.tfstate"` | no |
 | tfstate\_landingzone\_networking | (Optional) Name of the Terraform state for the networking landing zone | `string` | `"landingzone_networking.tfstate"` | no |
-| vm\_configs | (Required) Virtual Machine Configuration objects | `any` | n/a | yes |
+| vm\_configs | (Required) Virtual Machine Configuration objects | `map` | `{}` | no |
 | workspace | n/a | `any` | n/a | yes |
 
 ## Outputs
