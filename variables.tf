@@ -25,17 +25,23 @@ variable tags {
 
 variable vm_configs {
   description = "(Required) Virtual Machine Configuration objects"
+  default = {}
 }
 
 variable datalake_configs {
   description = "(Required) Data Lake Configuration objects"
+  default = {}
 }
 
 variable aml_configs {
   description = "(Required) Machine learning Configuration objects"
+  default = {}
 }
 
 variable synapse_configs {
   description = "(Required) Synapse Configuration objects"
+  default = {}
 }
 
+variable landingzone_tag {
+}
