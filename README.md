@@ -32,33 +32,44 @@ Note - the script bellow is not covering a shared environment multiple devops en
 rover login -t terraformdev.onmicrosoft.com -s [subscription GUID]
 # Environment is needed to be defined, otherwise the below LZs will land into sandpit which someone else is working on
 export TF_VAR_environment={Your Environment}
+# Set the folder name of this example
+example=101-basic-ml
+```
+
+## Apply the landing zone
+```bash
 # Add the lower dependency landingzones
 rover --clone-landingzones --clone-branch vnext13
-# Deploy the launchpad light to store the tfstates
-rover -lz /tf/caf/landingzones/launchpad -a apply -launchpad -var location=southeastasia
+rover --clone-folder /landingzones/launchpad --clone-branch vnext13
+rover --clone-folder /landingzones/landingzone_caf_foundations --clone-branch vnext13
+rover --clone-folder /landingzones/landingzone_networking --clone-branch vnext13
 
-## To deploy the landing zones, some dependencies are required: caf foundations and networking
-rover -lz /tf/caf/landingzones/landingzone_caf_foundations/ -a apply -var-file /tf/caf/configuration/landingzone_caf_foundations.tfvars
-rover -lz /tf/caf/landingzones/landingzone_networking/ -a apply -var-file /tf/caf/configuration/landingzone_networking.tfvars 
+# Deploy the launchpad light to store the tfstates.
+rover -lz /tf/caf/landingzones/launchpad -a apply -launchpad -var location=southeastasia
+## To deploy dependencies for accounting, apply caf foundations.
+rover -lz /tf/caf/landingzones/landingzone_caf_foundations/ \
+      -tfstate ${example}_landingzone_caf_foundations.tfstate \
+      -var-file /tf/caf/examples/${example}/landingzone_caf_foundations.tfvars \
+      -a apply
+
+# Deploy networking
+rover -lz /tf/caf/landingzones/landingzone_networking/ \
+      -tfstate ${example}_landingzone_networking.tfstate \
+      -var-file /tf/caf/examples/${example}/landingzone_networking.tfvars \
+      -a apply
 
 # Run data landing zone deployment
-rover -lz /tf/caf/ -tfstate landingzone_data.tfstate -a apply 
+rover -lz /tf/caf/ \
+      -tfstate ${example}_landingzone_data.tfstate \
+      -var-file /tf/caf/examples/${example}/configuration.tfvars \
+      -var tfstate_landingzone_networking=${example}_landingzone_networking.tfstate \
+      -var landingzone_tag=${example}_landingzone_aks \
+      -a apply
 ```
 
 ## Deleting the development environment
 
-Have fun playing with the landing zone and once you are done, you can simply delete the deployment using:
-
-```bash
-rover -lz /tf/caf/ -tfstate landingzone_data.tfstate -a destroy -auto-approve
-rover -lz /tf/caf/landingzones/landingzone_networking/ -a destroy -var-file /tf/caf/configuration/landingzone_networking.tfvars
-rover -lz /tf/caf/landingzones/landingzone_caf_foundations/ -a destroy -var-file /tf/caf/configuration/landingzone_caf_foundations.tfvars
-
-# to destroy the launchpad you need to conifrm you are connected with your user. If not reconnect with
-rover login -t terraformdev.onmicrosoft.com -s [subscription GUID]
-
-rover -lz /tf/caf/landingzones/launchpad -a destroy -launchpad
-```
+Have fun playing with the landing zone and once you are done, you can simply delete the deployment replacing the ```-a apply``` with ```-a destroy``` in the previous commands.
 
 <!--- BEGIN_TF_DOCS --->
 ## Requirements
