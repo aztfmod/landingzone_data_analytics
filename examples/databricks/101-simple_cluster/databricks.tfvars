@@ -1,3 +1,5 @@
+level = "level3"
+
 tfstates = {
   caf_foundations = {
     tfstate = "caf_foundations.tfstate"

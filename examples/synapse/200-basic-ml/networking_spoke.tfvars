@@ -1,5 +1,17 @@
-landingzone_name = "databricks_networking_spoke"
+
+# Requires:
+# - caf_launchpad scenario 200+
+# - caf_foundations
+# - caf_neworking with 200-multi-region-hub
+
+# Commands
+# - deploy:
+#   rover -lz /tf/caf/solutions/ -var-file /tf/caf/solutions/examples/data_analytics/200-basic-ml/networking_spoke.tfvars -tfstate 200-basic-ml-networking_spoke.tfstate -a apply
+# - destroy:
+#   rover -lz /tf/caf/solutions/ -var-file /tf/caf/solutions/examples/data_analytics/200-basic-ml/networking_spoke.tfvars -tfstate 200-basic-ml-networking_spoke.tfstate -a destroy
+
 level = "level2"
+landingzone_name = "dap_networking_spoke"
 
 tfstates = {
   caf_foundations = {
@@ -11,69 +23,74 @@ tfstates = {
 }
 
 resource_groups = {
-  vnet_re1 = {
-    name   = "databricks-networking-re1"
+  dap_spoke_re1 = {
+    name   = "dap-vnet"
     region = "region1"
   }
 }
 
-
-
 vnets = {
-  vnet_spoke_data_re1 = {
-    resource_group_key = "vnet_re1"
+  spoke_dap_re1 = {
+    resource_group_key = "dap_spoke_re1"
+    region             = "region1"
     vnet = {
-      name          = "databricks"
-      address_space = ["10.200.100.0/24"]
+      name          = "dap"
+      address_space = ["100.64.52.0/22"]
     }
     specialsubnets = {}
     subnets = {
       AzureBastionSubnet = {
         name    = "AzureBastionSubnet"
-        cidr    = ["10.200.100.0/29"]
+        cidr    = ["100.64.52.0/29"]
         nsg_key = "azure_bastion_nsg"
       }
       jumpbox = {
         name              = "jumpbox"
-        cidr              = ["10.200.100.8/29"]
+        cidr              = ["100.64.52.8/29"]
+        service_endpoints = ["Microsoft.Storage"]
       }
-      databricks_public = {
-        name = "databricks-public"
-        cidr = ["10.200.100.64/26"]
-        delegation = {
-          name = "databricks"
-          service_delegation = "Microsoft.Databricks/workspaces"
-          actions = [
-            "Microsoft.Network/virtualNetworks/subnets/join/action",
-            "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action",
-            "Microsoft.Network/virtualNetworks/subnets/unprepareNetworkPolicies/action"
-          ]
-        }
+      Subnet_storage = {
+        name              = "Datalake"
+        cidr              = ["100.64.53.0/25"]
+        service_endpoints = ["Microsoft.Storage"]
+        # nsg_name          = "datalake_nsg"
       }
-      databricks_private = {
-        name = "databricks-private"
-        cidr = ["10.200.100.128/26"]
-        delegation = {
-          name = "databricks"
-          service_delegation = "Microsoft.Databricks/workspaces"
-          actions = [
-            "Microsoft.Network/virtualNetworks/subnets/join/action",
-            "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action",
-            "Microsoft.Network/virtualNetworks/subnets/unprepareNetworkPolicies/action"
-          ]
-        }
+      Subnet_ml = {
+        name              = "Ml_Workspace"
+        cidr              = ["100.64.53.128/25"]
+        service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault"]
+        # nsg_name          = "Ml_Workspace_nsg"
+      }
+      Subnet_synapse = {
+        name              = "Synpase_Workspace"
+        cidr              = ["100.64.54.0/25"]
+        service_endpoints = ["Microsoft.Storage"]
+        # nsg_name          = "Synapse_Workspace_nsg"
+      }
+      private_endpoints = {
+        name                                           = "private_endpoints"
+        cidr                                           = ["100.64.55.0/24"]
+        enforce_private_link_endpoint_network_policies = true
+      }
+    }
+
+    # you can setup up to 5 keys - vnet diganostic
+    diagnostic_profiles = {
+      vnet = {
+        definition_key   = "networking_all"
+        destination_type = "log_analytics"
+        destination_key  = "central_logs"
       }
     }
 
   }
 }
 
-
 vnet_peerings = {
-  vnet_spoke_data_re1_TO_hub_rg1 = {
-    name = "vnet_spoke_data_re1_TO_hub_rg1"
+  spoke_dap_re1_TO_hub_rg1 = {
+    name = "spoke_dap_re1_TO_hub_rg1"
     from = {
-      vnet_key = "vnet_spoke_data_re1"
+      vnet_key = "spoke_dap_re1"
     }
     to = {
       tfstate_key = "networking_hub"
@@ -87,8 +104,8 @@ vnet_peerings = {
     use_remote_gateways          = false
   }
 
-  hub_rg1_TO_vnet_spoke_data_re1 = {
-    name = "hub_rg1_TO_vnet_spoke_data_re1"
+  hub_rg1_TO_spoke_dap_re1 = {
+    name = "hub_rg1_TO_spoke_dap_re1"
     from = {
       tfstate_key = "networking_hub"
       lz_key      = "networking_hub"
@@ -96,7 +113,7 @@ vnet_peerings = {
       vnet_key    = "hub_rg1"
     }
     to = {
-      vnet_key = "vnet_spoke_data_re1"
+      vnet_key = "spoke_dap_re1"
     }
     allow_virtual_network_access = true
     allow_forwarded_traffic      = true
@@ -106,10 +123,48 @@ vnet_peerings = {
 
 }
 
+bastion_hosts = {
+  bastion_re1 = {
+    name               = "bastion"
+    resource_group_key = "dap_spoke_re1"
+    vnet_key           = "spoke_dap_re1"
+    subnet_key         = "AzureBastionSubnet"
+    public_ip_key      = "bastion_host_re1"
 
-#
-# Definition of the networking security groups
-#
+    # you can setup up to 5 profiles
+    diagnostic_profiles = {
+      operations = {
+        definition_key   = "bastion_host"
+        destination_type = "log_analytics"
+        destination_key  = "central_logs"
+      }
+    }
+
+  }
+}
+
+public_ip_addresses = {
+  bastion_host_re1 = {
+    name                    = "bastion-pip1"
+    resource_group_key      = "dap_spoke_re1"
+    sku                     = "Standard"
+    allocation_method       = "Static"
+    ip_version              = "IPv4"
+    idle_timeout_in_minutes = "4"
+
+    # you can setup up to 5 key
+    diagnostic_profiles = {
+      bastion_host_rg1 = {
+        definition_key   = "public_ip_address"
+        destination_type = "log_analytics"
+        destination_key  = "central_logs"
+      }
+    }
+
+  }
+}
+
+
 network_security_group_definition = {
   # This entry is applied to all subnets with no NSG defined
   empty_nsg = {
@@ -119,6 +174,12 @@ network_security_group_definition = {
         definition_key   = "network_security_group"
         destination_type = "storage"
         destination_key  = "all_regions"
+      }
+      operations = {
+        name             = "operations"
+        definition_key   = "network_security_group"
+        destination_type = "log_analytics"
+        destination_key  = "central_logs"
       }
     }
   }
@@ -130,6 +191,12 @@ network_security_group_definition = {
         definition_key   = "network_security_group"
         destination_type = "storage"
         destination_key  = "all_regions"
+      }
+      operations = {
+        name             = "operations"
+        definition_key   = "network_security_group"
+        destination_type = "log_analytics"
+        destination_key  = "central_logs"
       }
     }
 

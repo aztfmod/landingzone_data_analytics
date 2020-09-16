@@ -42,6 +42,10 @@ export example="101-simple_cluster"
 # Clone the public landing zones
 git clone git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
 
+# or refresh
+cd /tf/caf/public
+git pull
+
 # Add the launchpad landingzone if not yet deployed
 rover -lz /tf/caf/public/landingzones/caf_launchpad -launchpad -var-file /tf/caf/public/landingzones/caf_launchpad/scenario/200/configuration.tfvars -a apply
 
