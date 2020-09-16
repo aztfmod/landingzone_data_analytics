@@ -95,7 +95,7 @@ Have fun playing with the landing zone and once you are done, you can simply del
 |------|---------|
 | terraform | >= 0.13 |
 | azuread | ~> 1.0.0 |
-| azurecaf | 1.0.0-pre |
+| azurecaf | 1.0.0 |
 | azurerm | ~> 2.27.0 |
 | databricks | ~> 0.2.5 |
 | external | ~> 1.2.0 |
