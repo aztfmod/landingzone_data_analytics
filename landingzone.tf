@@ -1,7 +1,8 @@
 ## declare here the resources for your landing zone
 
 module "caf" {
-  source = "git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git"
+  # source = "git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git"
+  source = "/tf/caf/public"
 
   tfstates                    = local.tfstates
   tags                        = local.tags
@@ -18,9 +19,9 @@ module "caf" {
   managed_identities          = var.managed_identities
   role_mapping                = var.role_mapping
   compute = {
-    virtual_machines = var.virtual_machines
-    bastion_hosts    = var.bastion_hosts
-    aks_clusters     = var.aks_clusters
+    virtual_machines           = var.virtual_machines
+    bastion_hosts              = var.bastion_hosts
+    aks_clusters               = var.aks_clusters
     azure_container_registries = var.azure_container_registries
   }
   networking = {

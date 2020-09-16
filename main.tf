@@ -29,7 +29,7 @@ terraform {
       version = "1.0.0-pre"
     }
     databricks = {
-      source = "databrickslabs/databricks"
+      source  = "databrickslabs/databricks"
       version = "~> 0.2.5"
     }
   }
@@ -41,6 +41,7 @@ provider "azurerm" {
   features {
     key_vault {
       purge_soft_delete_on_destroy = true
+      recover_soft_deleted_key_vaults = false
     }
   }
 }
@@ -69,13 +70,12 @@ data "terraform_remote_state" "networking" {
 
 locals {
   landingzone_tag = {
-    "landingzone" = "aks"//basename(abspath(path.module))
+    "landingzone" = "aks" //basename(abspath(path.module))
   }
   tags = merge(var.tags, { "level" = var.level }, { "environment" = var.environment }, { "rover_version" = var.rover_version })
 
   global_settings = {
     prefix         = data.terraform_remote_state.caf_foundations.outputs.global_settings.prefix
-    convention     = try(var.global_settings.convention, data.terraform_remote_state.caf_foundations.outputs.global_settings.convention)
     default_region = try(var.global_settings.default_region, data.terraform_remote_state.caf_foundations.outputs.global_settings.default_region)
     environment    = data.terraform_remote_state.caf_foundations.outputs.global_settings.environment
     regions        = try(var.global_settings.regions, data.terraform_remote_state.caf_foundations.outputs.global_settings.regions)

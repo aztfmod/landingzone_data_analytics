@@ -17,7 +17,7 @@ This landing zone is a starter for data analytics platform that stacks on top of
 
 ## Prerequisites
 
-This landing zone is a "level 2" type of landing zone, which requires you have set the foundations. The supported lower level landing zone is "landingzone_caf_foundations" which can be found in the same release and must have been applied successfully before applying this one.
+This landing zone is a "level 2" type of landing zone, which requires you have set the foundations. The supported lower level landing zone is "caf_foundations" which can be found in the same release and must have been applied successfully before applying this one.
 
 ## Developping this landing zone
 
@@ -25,45 +25,58 @@ Those are the minimum steps to allow a single devops engineer.
 
 If the subscription is shared across multiple devops engineer is it recommended each devops engineer use their own launchpad to avoid any conflicts between devops engineers. This can be achieved by setting a specific environment variable value. In the following script we use the environment value of "asia".
 
-Note - the script bellow is not covering a shared environment multiple devops engineer can get access and collaborate (coming later)
-
 ```bash
 # Login the Azure subscription
 rover login -t terraformdev.onmicrosoft.com -s [subscription GUID]
 # Environment is needed to be defined, otherwise the below LZs will land into sandpit which someone else is working on
-export TF_VAR_environment={Your Environment}
-# Set the folder name of this example
-example=101-basic-ml
+# Set the environment
+export TF_VAR_environment="MoonStar"
+
+# Set the example folder
+export example="101-simple_cluster"
+
 ```
 
-## Apply the landing zone
+## Apply the landing zone (launchpad, foundation and networking hub)
 ```bash
-# Add the lower dependency landingzones
-rover --clone-landingzones --clone-branch vnext13
-rover --clone-folder /landingzones/launchpad --clone-branch vnext13
-rover --clone-folder /landingzones/landingzone_caf_foundations --clone-branch vnext13
-rover --clone-folder /landingzones/landingzone_networking --clone-branch vnext13
+# Clone the public landing zones
+git clone git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
 
-# Deploy the launchpad light to store the tfstates.
-rover -lz /tf/caf/landingzones/launchpad -a apply -launchpad -var location=southeastasia
+# Add the launchpad landingzone if not yet deployed
+rover -lz /tf/caf/public/landingzones/caf_launchpad -launchpad -var-file /tf/caf/public/landingzones/caf_launchpad/scenario/200/configuration.tfvars -a apply
+
 ## To deploy dependencies for accounting, apply caf foundations.
-rover -lz /tf/caf/landingzones/landingzone_caf_foundations/ \
-      -tfstate ${example}_landingzone_caf_foundations.tfstate \
-      -var-file /tf/caf/examples/${example}/landingzone_caf_foundations.tfvars \
+rover -lz /tf/caf/public/landingzones/caf_foundations \
       -a apply
 
-# Deploy networking
-rover -lz /tf/caf/landingzones/landingzone_networking/ \
-      -tfstate ${example}_landingzone_networking.tfstate \
-      -var-file /tf/caf/examples/${example}/landingzone_networking.tfvars \
+# Deploy the networking hub
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+      -tfstate networking_hub.tfstate \
+      -var-file /tf/caf/public/landingzones/caf_networking/scenario/200-single-region-hub/configuration.tfvars \
       -a apply
 
-# Run data landing zone deployment
-rover -lz /tf/caf/ \
-      -tfstate ${example}_landingzone_data.tfstate \
-      -var-file /tf/caf/examples/${example}/configuration.tfvars \
-      -var tfstate_landingzone_networking=${example}_landingzone_networking.tfstate \
-      -var landingzone_tag=${example}_landingzone_aks \
+# Deploy the spoke networking for Databricks that will peer the networking hub
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+      -var-file /tf/caf/examples/databricks/${example}/networking_spoke.tfvars \
+      -tfstate networking_spoke_databricks.tfstate \
+      -a apply
+```
+
+## Deploy the Databricks construction set
+```bash
+# The Databricks construction set is banse
+export base_landingzone_tfstate_name="databricks_workspace.tfstate"
+# Deploy Azure services for Databricks workspace
+rover -lz /tf/caf \
+      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
+      -tfstate ${base_landingzone_tfstate_name} \
+      -a apply
+
+# Configure the Databricks cluster
+rover -lz /tf/caf/add-ons/databricks \
+      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
+      -tfstate databricks.tfstate \
+      -var tfstate_key=${base_landingzone_tfstate_name} \
       -a apply
 ```
 
