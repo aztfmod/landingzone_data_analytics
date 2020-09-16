@@ -161,7 +161,7 @@ storage_accounts = {
 
 keyvaults = {
   secrets = {
-    name                = "secrets"
+    name                = "secretsdap"
     resource_group_key  = "dap_jumpbox_re1"
     sku_name            = "premium"
     soft_delete_enabled = true
