@@ -1,52 +1,108 @@
-provider "azurerm" {
-  features {}
-}
-
 terraform {
-  backend "azurerm" {
-  }
   required_providers {
-    azurecaf = {
-      source  = "aztfmod/azurecaf"
-      version = "~>0.4.3"
-    }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>2.20.0"
+      version = "~> 2.27.0"
+    }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 1.0.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 2.2.1"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1.0"
+    }
+    external = {
+      source  = "hashicorp/external"
+      version = "~> 1.2.0"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 2.2.0"
+    }
+    azurecaf = {
+      source  = "aztfmod/azurecaf"
+      version = "1.0.0"
+    }
+    databricks = {
+      source  = "databrickslabs/databricks"
+      version = "~> 0.2.5"
     }
   }
   required_version = ">= 0.13"
 }
 
-data "terraform_remote_state" "landingzone_networking" {
-  backend = "azurerm"
-  config = {
-    storage_account_name = var.lowerlevel_storage_account_name
-    container_name       = var.workspace
-    resource_group_name  = var.lowerlevel_resource_group_name
-    key                  = var.tfstate_landingzone_networking
+
+provider "azurerm" {
+  features {
+    key_vault {
+      purge_soft_delete_on_destroy = true
+      recover_soft_deleted_key_vaults = false
+    }
   }
 }
 
-data "terraform_remote_state" "landingzone_caf_foundations" {
+data "azurerm_client_config" "current" {}
+
+data "terraform_remote_state" "caf_foundations" {
   backend = "azurerm"
   config = {
     storage_account_name = var.lowerlevel_storage_account_name
-    container_name       = var.workspace
+    container_name       = var.lowerlevel_container_name
+    key                  = var.tfstates.caf_foundations.tfstate
     resource_group_name  = var.lowerlevel_resource_group_name
-    key                  = var.tfstate_landingzone_caf_foundations
+  }
+}
+
+data "terraform_remote_state" "networking" {
+  backend = "azurerm"
+  config = {
+    storage_account_name = var.lowerlevel_storage_account_name
+    container_name       = var.lowerlevel_container_name
+    key                  = var.tfstates.networking.tfstate
+    resource_group_name  = var.lowerlevel_resource_group_name
   }
 }
 
 locals {
   landingzone_tag = {
-    "landingzone" = basename(abspath(path.module))
+    "landingzone" = "aks" //basename(abspath(path.module))
+  }
+  tags = merge(var.tags, { "level" = var.level }, { "environment" = var.environment }, { "rover_version" = var.rover_version })
+
+  global_settings = {
+    prefix         = data.terraform_remote_state.caf_foundations.outputs.global_settings.prefix
+    default_region = try(var.global_settings.default_region, data.terraform_remote_state.caf_foundations.outputs.global_settings.default_region)
+    environment    = data.terraform_remote_state.caf_foundations.outputs.global_settings.environment
+    regions        = try(var.global_settings.regions, data.terraform_remote_state.caf_foundations.outputs.global_settings.regions)
+    max_length     = try(var.max_length, data.terraform_remote_state.caf_foundations.outputs.global_settings.max_length)
   }
 
-  global_settings = data.terraform_remote_state.landingzone_caf_foundations.outputs.global_settings
+  diagnostics = {
+    diagnostics_definition   = merge(data.terraform_remote_state.caf_foundations.outputs.diagnostics.diagnostics_definition, var.diagnostics_definition)
+    diagnostics_destinations = data.terraform_remote_state.caf_foundations.outputs.diagnostics.diagnostics_destinations
+    storage_accounts         = data.terraform_remote_state.caf_foundations.outputs.diagnostics.storage_accounts
+    log_analytics            = data.terraform_remote_state.caf_foundations.outputs.diagnostics.log_analytics
+  }
 
-  prefix                     = local.global_settings.prefix
-  tags                       = merge(var.tags, local.landingzone_tag, { "environment" = local.global_settings.environment })
-  caf_foundations_accounting = data.terraform_remote_state.landingzone_caf_foundations.outputs.foundations_accounting
-  vnets                      = data.terraform_remote_state.landingzone_networking.outputs.vnets
+  tfstates = merge(
+    map(var.landingzone_name,
+      map(
+        "storage_account_name", var.tfstate_storage_account_name,
+        "container_name", var.tfstate_container_name,
+        "resource_group_name", var.tfstate_resource_group_name,
+        "key", var.tfstate_key,
+        "level", var.level,
+        "tenant_id", data.azurerm_client_config.current.tenant_id,
+        "subscription_id", data.azurerm_client_config.current.subscription_id
+      )
+    )
+    ,
+    data.terraform_remote_state.networking.outputs.tfstates
+  )
+
 }
