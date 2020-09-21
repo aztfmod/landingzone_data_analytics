@@ -40,23 +40,29 @@ export example="101-simple_cluster"
 ## Apply the landing zone (launchpad, foundation and networking hub)
 ```bash
 # Clone the public landing zones
-git clone git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
+# git clone git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
+git clone -b RS-analytics https://github.com/aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
 
 # or refresh
 cd /tf/caf/public
 git pull
 
 # Add the launchpad landingzone if not yet deployed
-rover -lz /tf/caf/public/landingzones/caf_launchpad -launchpad -var-file /tf/caf/public/landingzones/caf_launchpad/scenario/200/configuration.tfvars -a apply
+# rover -lz /tf/caf/public/landingzones/caf_launchpad -launchpad -var-file /tf/caf/public/landingzones/caf_launchpad/scenario/200/configuration.tfvars -a apply
+rover -lz /tf/caf/public/landingzones/caf_launchpad -launchpad -var-file /tf/caf/public/landingzones/caf_launchpad/scenario/100/configuration.tfvars -a apply
 
 ## To deploy dependencies for accounting, apply caf foundations.
 rover -lz /tf/caf/public/landingzones/caf_foundations \
       -a apply
 
 # Deploy the networking hub
+# rover -lz /tf/caf/public/landingzones/caf_networking/ \
+#      -tfstate networking_hub.tfstate \
+#      -var-file /tf/caf/public/landingzones/caf_networking/scenario/200-single-region-hub/configuration.tfvars \
+#      -a apply
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
       -tfstate networking_hub.tfstate \
-      -var-file /tf/caf/public/landingzones/caf_networking/scenario/200-single-region-hub/configuration.tfvars \
+      -var-file /tf/caf/public/landingzones/caf_networking/scenario/100-single-region-hub/configuration.tfvars \
       -a apply
 
 # Deploy the spoke networking for Databricks that will peer the networking hub
