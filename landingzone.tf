@@ -1,8 +1,8 @@
 ## declare here the resources for your landing zone
 
 module "caf" {
-  source = "git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git"
-  # source = "/tf/caf/public"
+  # source = "git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git"
+  source = "/tf/caf/public"
 
   tfstates                    = local.tfstates
   tags                        = local.tags
@@ -35,5 +35,12 @@ module "caf" {
     mssql_servers         = var.mssql_servers
     synapse_workspaces    = var.synapse_workspaces
     databricks_workspaces = var.databricks_workspaces
+    machine_learning_workspaces = var.machine_learning_workspaces
+  }
+  webapp = {
+    azurerm_application_insights = var.application_insights
+    # app_service_environments     = try(var.webapp.app_service_environments, {})
+    # app_service_plans            = try(var.webapp.app_service_plans, {})
+    # app_services                 = try(var.webapp.app_services, {})
   }
 }
