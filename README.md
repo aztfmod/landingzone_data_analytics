@@ -102,7 +102,7 @@ Have fun playing with the landing zone and once you are done, you can simply del
 | terraform | >= 0.13 |
 | azuread | ~> 1.0.0 |
 | azurecaf | 1.0.0 |
-| azurerm | ~> 2.27.0 |
+| azurerm | ~> 2.28.0 |
 | databricks | ~> 0.2.5 |
 | external | ~> 1.2.0 |
 | null | ~> 2.1.0 |
@@ -113,7 +113,7 @@ Have fun playing with the landing zone and once you are done, you can simply del
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2.27.0 |
+| azurerm | ~> 2.28.0 |
 | terraform | n/a |
 
 ## Inputs
@@ -124,9 +124,9 @@ Have fun playing with the landing zone and once you are done, you can simply del
 | app\_service\_environments | n/a | `map` | `{}` | no |
 | app\_service\_plans | n/a | `map` | `{}` | no |
 | app\_services | n/a | `map` | `{}` | no |
+| application\_insights | n/a | `map` | `{}` | no |
 | azure\_container\_registries | n/a | `map` | `{}` | no |
 | azuread\_groups | n/a | `map` | `{}` | no |
-| azurerm\_application\_insights | n/a | `map` | `{}` | no |
 | azurerm\_redis\_caches | n/a | `map` | `{}` | no |
 | bastion\_hosts | n/a | `map` | `{}` | no |
 | databricks | n/a | `map` | `{}` | no |
@@ -145,6 +145,7 @@ Have fun playing with the landing zone and once you are done, you can simply del
 | lowerlevel\_key | n/a | `any` | n/a | yes |
 | lowerlevel\_resource\_group\_name | n/a | `any` | n/a | yes |
 | lowerlevel\_storage\_account\_name | Map of the remote data state for lower level | `any` | n/a | yes |
+| machine\_learning\_workspaces | n/a | `map` | `{}` | no |
 | managed\_identities | n/a | `map` | `{}` | no |
 | max\_length | n/a | `number` | `40` | no |
 | mssql\_servers | n/a | `map` | `{}` | no |
