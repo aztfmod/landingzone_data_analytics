@@ -112,7 +112,7 @@ variable private_dns {
 variable synapse_workspaces {
   default = {}
 }
-variable azurerm_application_insights {
+variable application_insights {
   default = {}
 }
 variable role_mapping {
@@ -127,3 +127,7 @@ variable databricks_workspaces {
 variable databricks {
   default = {}
 }
+variable machine_learning_workspaces {
+  default = {}
+}
+
