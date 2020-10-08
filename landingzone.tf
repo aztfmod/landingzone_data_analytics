@@ -1,9 +1,9 @@
 ## declare here the resources for your landing zone
 
 module "caf" {
-  source  = "aztfmod/caf-enterprise-scale/azurerm"
-  version = "~>0.2"
-}
+#   source  = "aztfmod/caf-enterprise-scale/azurerm"
+#   version = "~>0.2"
+  source  = "github.com/aztfmod/terraform-azurerm-caf?ref=0.4"
 
   tfstates                    = local.tfstates
   tags                        = local.tags
