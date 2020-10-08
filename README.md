@@ -41,7 +41,7 @@ export example="101-simple_cluster"
 ```bash
 # Clone the public landing zones
 # git clone git@github.com:aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
-git clone -b RS-analytics https://github.com/aztfmod/terraform-azurerm-caf-enterprise-scale.git /tf/caf/public
+git clone -b 0.4 https://github.com/aztfmod/terraform-azurerm-caf.git /tf/caf/public
 
 # or refresh
 cd /tf/caf/public
