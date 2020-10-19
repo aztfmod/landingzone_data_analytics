@@ -3,7 +3,8 @@
 module "caf" {
 #   source  = "aztfmod/caf-enterprise-scale/azurerm"
 #   version = "~>0.2"
-  source  = "github.com/aztfmod/terraform-azurerm-caf?ref=0.4"
+#  source  = "github.com/aztfmod/terraform-azurerm-caf?ref=0.4"
+  source  = "../"
 
   tfstates                    = local.tfstates
   tags                        = local.tags
@@ -19,6 +20,7 @@ module "caf" {
   keyvault_access_policies    = var.keyvault_access_policies
   managed_identities          = var.managed_identities
   role_mapping                = var.role_mapping
+  tenant_id                   = var.tenant_id
   compute = {
     virtual_machines           = var.virtual_machines
     bastion_hosts              = var.bastion_hosts
@@ -39,9 +41,12 @@ module "caf" {
     machine_learning_workspaces = var.machine_learning_workspaces
   }
   webapp = {
-    azurerm_application_insights = var.application_insights
+    azurerm_application_insights = var.azurerm_application_insights
     # app_service_environments     = try(var.webapp.app_service_environments, {})
     # app_service_plans            = try(var.webapp.app_service_plans, {})
     # app_services                 = try(var.webapp.app_services, {})
+  }
+  remote_objects = {
+    networking = merge(local.lower_networking, local.current_networking)
   }
 }
