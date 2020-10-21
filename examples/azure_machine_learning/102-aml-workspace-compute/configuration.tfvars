@@ -16,6 +16,24 @@ landingzone = {
   }
 }
 
+# landingzone = {
+#     backend_type          = "azurerm"
+#     global_settings_key   = "shared_services"
+#     level = "level3"
+#     key   = "aml_landingzone"
+#     tfstates = {
+#       shared_services = {
+#         level   = "lower"
+#         tfstate = "caf_shared_services.tfstate"
+#       }
+#       dap_networking_spoke = {  
+#         level   = "lower"
+#         tfstate = "networking_spoke_data_analytics.tfstate"
+#       }
+#     }
+# }
+
+
 resource_groups = {
   dap_azure_ml_re1 = {
     name = "machine-learning-rg1"

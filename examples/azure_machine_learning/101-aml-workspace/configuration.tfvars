@@ -13,7 +13,7 @@ landingzone = {
 
 resource_groups = {
   dap_azure_ml_re1 = {
-    name = "azure-ml"
+    name = "machine-learning-rg1"
   }
 }
 
