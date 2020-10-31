@@ -1,4 +1,4 @@
-# Cloud Adoption Framework for Azure - Landing zones on Terraform - Azure Kubernetes Services
+# Cloud Adoption Framework for Azure - Landing zones on Terraform - Data Analytics Platform
 
 Microsoft Cloud Adoption Framework for Azure provides you with guidance and best practices to adopt Azure.
 
