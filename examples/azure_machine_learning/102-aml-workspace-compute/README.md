@@ -1,6 +1,6 @@
 # CAF landing zones for Terraform - Azure Machine Learning (AML) example
 
-Deploys a AML Workspace \.
+Deploys a AML Workspace with compute instances.
 
 DAP landing zone operates at **level 3**.
 
@@ -14,7 +14,7 @@ Before running this example, please make sure you have setup your environment as
 
 This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
 
-![solutions](../../../_images/examples/101-databricks-architecture.png)
+![solutions](../../../_images/examples/aml-architecture.svg)
 
 ## Components deployed by this example
 
