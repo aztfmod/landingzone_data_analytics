@@ -20,8 +20,8 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 | Component                | Type of resource                 | Purpose                                                        |
 |--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the cluster and the node pool resources |
-| Machin Learning Workspace| Workspace                        | Databricks clsuter                                             |
+| resource group           | Resource group                   | resource group to host the cluster and the compute resources   |
+| Machin Learning Workspace| Workspace                        | machine learning workspace                                     |
                             
 
 ## Deploying this example
