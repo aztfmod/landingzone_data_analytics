@@ -1,4 +1,4 @@
-# CAF landing zones for Terraform - Databrics Cluster example
+# CAF landing zones for Terraform - Databricks Cluster example
 
 Deploys a Databrics Cluster in a virtual network, with instance pool.
 
@@ -10,24 +10,19 @@ For a review of the hierarchy approach of Cloud Adoption Framework for Azure lan
 
 Before running this example, please make sure you have setup your environment as described in the [following guide](../../readme.md)
 
-## Architecture diagram  [TO be updated for Databrics]
+## Architecture diagram  [TO be updated for Databricks]
 
 This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
 
-![solutions](../../../_pictures/examples/101-single-cluster.PNG)
+![solutions](../../../_images/examples/101-databricks-architecture.PNG)
 
 ## Components deployed by this example  [to be upadtated]
 
 | Component                | Type of resource                 | Purpose                                                        |
 |--------------------------|----------------------------------|----------------------------------------------------------------|
-| aks_re1, aks_nodes_re1   | Resource group                   | resource group to host the cluster and the node pool resources |
-| akscluster-001           | AKS Cluster                      | AKS Cluster                                                    |
-| acr                      | Azure Container Registry         | Azure Container Registry to store containers                   |
-| sharedsvc                | AKS node pool                    | Default node pool for AKS cluster                              |
-| managed public IP        | Public IP                        | Public IP address for the node pool.                           |
-| managed VMSS             | Virtual Machines Scale Set       | Scale set for the node pool.                                   |
-| managed load balancer    | Load balancer                    | Load balancer for the node pool.                               |
-| akscluster-001-agentpool | System Assigned Managed Identity | Managed identity for the node pool.                            |
+| resource group           | Resource group                   | resource group to host the cluster and the node pool resources |
+| databricks cluster       | Workspace                        | Databricks clsuter                                             |
+| instance pool            | Compute                          | Compute load for worker                                        |
 
 ## Deploying this example
 
