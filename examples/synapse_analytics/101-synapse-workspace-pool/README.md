@@ -20,7 +20,7 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 | Component                | Type of resource                 | Purpose                                                        |
 |--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the workspace                           |
+| resource group           | Resource group                   | resource group to host the workspace and instance pools        |
 | synapse workspace        | Workspace                        | synapse workspace                                              |
 | spark pool               | compute                          | spark compute cluster                                          |
 | sql pool                 | compute                          | sql compute cluster                                            |
