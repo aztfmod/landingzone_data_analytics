@@ -97,7 +97,7 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
 ```
 
 This deployment adds the following components:
-![caf_layers](../_pictures/examples/101-multi-region-hub.png)
+![caf_layers](https://raw.githubusercontent.com/aztfmod/landingzone_aks/master/_pictures/examples/101-multi-region-hub.png)
 
 ### Apply network spoke (level 3)
 
