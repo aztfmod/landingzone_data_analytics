@@ -1,4 +1,4 @@
-# CAF landing zones for Terraform - Databricks Cluster example
+# CAF landing zones for Terraform - Synaspe Analytics example
 
 Deploys a Synapse workspace, with sparkp  pool and SQL pool in virtual network.
 
