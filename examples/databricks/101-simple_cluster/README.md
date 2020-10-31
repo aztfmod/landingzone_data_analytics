@@ -10,13 +10,13 @@ For a review of the hierarchy approach of Cloud Adoption Framework for Azure lan
 
 Before running this example, please make sure you have setup your environment as described in the [following guide](../../readme.md)
 
-## Architecture diagram  [TO be updated for Databricks]
+## Architecture diagram
 
 This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
 
 ![solutions](../../../_images/examples/101-databricks-architecture.PNG)
 
-## Components deployed by this example  [to be upadtated]
+## Components deployed by this example
 
 | Component                | Type of resource                 | Purpose                                                        |
 |--------------------------|----------------------------------|----------------------------------------------------------------|
