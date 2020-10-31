@@ -1,11 +1,32 @@
-# Introduction to data analytics landing zone
+# Cloud Adoption Framework for Azure - Landing zones on Terraform - Azure Kubernetes Services
 
-Welcome to Cloud Adoption Framework for Azure: Terraform landing zones.
+Microsoft Cloud Adoption Framework for Azure provides you with guidance and best practices to adopt Azure.
 
-This landing zone is a starter for data analytics platform that stacks on top of **landingzone_caf_foundations** and **landingzone_networking**
+A landing zone is a segment of a cloud environment, that has been preprovisioned through code, and is dedicated to the support of one or more workloads. Landing zones provide access to foundational tools and controls to establish a compliant place to innovate and build new workloads in the cloud, or to migrate existing workloads to the cloud. Landing zones use defined sets of cloud services and best practices to set you up for success.
 
-### Data analytics landing zone foundation
+## Goals
+
+The data analytics & AI landing zones sits on top of Cloud Adoption Framework for Azure foundational landing zones and enables the deployment of Data Platform Services on top of it.
+
+You can find the core landing zones here: [CAF landing zones](https://github.com/Azure/caf-terraform-landingzones/)
+
+Data analytics landing zone foundation: 
+
 ![Landing zone architecture](./_images/data_analytics_platform.PNG)
+
+## Getting Started
+
+Clone this repo on your local machine and follow the to [examples section](./examples) to get started and deploy an Data Analytics Platform landing zone.
+
+## Related repositories
+
+| Repo                                                                                              | Description                                                |
+|---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| [caf-terraform-landingzones](https://github.com/azure/caf-terraform-landingzones)                 | landing zones repo with sample and core documentations     |
+| [rover](https://github.com/aztfmod/rover)                                                         | devops toolset for operating landing zones                 |
+| [azure_caf_provider](https://github.com/aztfmod/terraform-provider-azurecaf)                      | custom provider for naming conventions                     |
+| [modules](https://registry.terraform.io/modules/aztfmod)   
+
 
 ### Components
 | Examples | Description|
@@ -98,3 +119,27 @@ Have fun playing with the landing zone and once you are done, you can simply del
 Error: Argument or block definition required: An argument or block definition is required here.
 
 <!--- END_TF_DOCS --->
+
+## Community
+
+Feel free to open an issue for feature or bug, or to submit a PR.
+
+In case you have any question, you can reach out to tf-landingzones at microsoft dot com.
+
+You can also reach us on [Gitter](https://gitter.im/aztfmod/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+## Contributing
+
+This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
+the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+
+When you submit a pull request, a CLA bot will automatically determine whether you need to provide
+a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
+provided by the bot. You will only need to do this once across all repos using our CLA.
+
+## Code of conduct
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
