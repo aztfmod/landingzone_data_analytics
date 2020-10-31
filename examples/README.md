@@ -11,3 +11,106 @@ The CAF landing zone for DAP provides you with the following examples:
 DAP landing zone operates at **level 3**, so before you are able to deploy them you will need to deploy the prerequisites enterprise landing zones.
 
 For a review of the hierarchy approach of Cloud Adoption Framework for Azure landing zones on Terraform, you can refer to [the following documentation](https://github.com/Azure/caf-terraform-landingzones/blob/master/documentation/code_architecture/hierarchy.md).
+
+### Core DAP landing zone (level 3)
+
+| DAP landing zone example                                                                                              | Description                                                |
+|---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| [101-single-cluster](./aks/101-single-cluster)| Provision single AKS cluster within open virtual network |
+| [102-multi-nodepools](./aks/102-multi-nodepools)| Provision single AKS cluster with multiple node pool within separate subnet (1 open virtual network). |
+| [103-multi-clusters](./aks/103-multi-clusters)| Provision multiple AKS clusters in separate regions, using availability zones.                     |
+| [104-private-cluster](./aks/104-private-cluster)| Provision private AKS clusters within private virtual network with Hub & Spoke UDR to Azure Firewall |
+
+
+## Setting up your test environment
+
+With the following steps, you can deploy a simplified enterprise framework that setups the minimal foundations for enterprise (levels 0-2)
+
+Once those steps are completed, you will be able to run the DAP landing zones:
+
+### Authenticate to your development environment
+
+We assume that at this step, you have cloned the AKS landing zones repository (this repo) on your machine and have opened it into Visual Studio Code development environment.
+
+Once into the development environment, please use the following steps:
+
+```bash
+# Login the Azure subscription
+rover login -t [TENANT_ID/TENANT_NAME] -s [SUBSCRIPTION_GUID]
+# Environment is needed to be defined, otherwise the below LZs will land into sandpit which someone else is working on
+export environment=[YOUR_ENVIRONMENT]
+git clone -b 0.4 https://github.com/aztfmod/terraform-azurerm-caf.git /tf/caf/public
+
+```
+
+### Apply foundations (level 0 and 1)
+
+```bash
+# Add the launchpad landingzone if not yet deployed
+# AIRS Subscription
+rover -lz /tf/caf/public/landingzones/caf_launchpad \
+-launchpad \
+-var-folder /tf/caf/public/landingzones/caf_launchpad/scenario/100 \
+-env ${environment} \
+-a apply
+
+# Enterprise Subscription (Optional)
+rover -lz /tf/caf/public/landingzones/caf_launchpad \
+-launchpad \
+-var-folder /tf/caf/public/landingzones/caf_launchpad/scenario/200 \
+-env ${environment} \
+-a apply
+
+# Level1
+## To deploy dependencies for accounting, apply caf foundations.
+rover -lz /tf/caf/public/landingzones/caf_foundations \
+       -env ${environment} \
+      -a [plan|apply|destroy]
+
+# Deploy shared_services typically monitoring, site recovery services, azure image gallery. In this example we dont deploy anything but it will expose the Terraform state to level 3 landing zones, so is required.
+rover -lz /tf/caf/public/landingzones/caf_shared_services/ \
+  -tfstate caf_shared_services.tfstate \
+  -parallelism 30 \
+  -level level2 \
+  -env ${environment} \
+  -a [plan|apply]
+```
+
+### Apply network hub (level 2)
+
+The networking hub is part of the core enterprise landing zone services, you can deploy it with the following command:
+
+```bash
+#Single Region [For test env]
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+-var-folder /tf/caf/public/landingzones/caf_networking/scenario/100-single-region-hub \
+-level level2 \
+-a [plan|apply]
+
+#Multi-region [For enterprise]
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+  -tfstate networking_hub.tfstate \
+  -var-folder /tf/caf/public/landingzones/caf_networking/scenario/101-multi-region-hub \
+  -env ${environment} \
+  -level level2 \
+  -a [plan|apply]
+```
+
+This deployment adds the following components:
+![caf_layers](../_pictures/examples/101-multi-region-hub.png)
+
+### Apply network spoke (level 3)
+
+```bash
+# Deploy networking spoke for AKS
+export example="102-aml-workspace-compute"
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+      -var-file /tf/caf/landingzone_data_analytics/examples/azure_machine_learning/${example}/networking_spoke.tfvars \
+      -tfstate networking_spoke_data_analytics.tfstate \
+      -env ${environment} \
+	    -level level3 \
+      -a [plan|apply|destroy]
+
+```
+
+Once the previous steps have been completed, the deployment of the lightweight enterprise scaffold to execute the DAP example landingzones is ready and you can step to one of the examples.
