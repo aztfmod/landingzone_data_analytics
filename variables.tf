@@ -14,21 +14,7 @@ variable global_settings {
 }
 
 variable landingzone {
-  default = {
-    backend_type = "azurerm"
-    current = {
-      level = "level3"
-      key = "data_analytics"
-    }
-    lower = {
-      foundations = {
-        tfstate = "caf_foundations.tfstate"
-      }
-      networking = {
-        tfstate = "caf_foundations.tfstate"
-      }
-    }
-  }
+  default = {}
 }
 
 variable tenant_id {

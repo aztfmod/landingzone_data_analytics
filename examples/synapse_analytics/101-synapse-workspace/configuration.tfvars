@@ -1,11 +1,11 @@
 landingzone = {
-  backend_type = "azurerm"
-  current = {
-    level = "level3"
-    key   = "synapse_landingzone"
-  }
-  lower = {
+  backend_type        = "azurerm"
+  global_settings_key = "shared_services"
+  level               = "level3"
+  key                 = "synaspe_landingzone"
+  tfstates = {
     shared_services = {
+      level   = "lower"
       tfstate = "caf_shared_services.tfstate"
     }
   }

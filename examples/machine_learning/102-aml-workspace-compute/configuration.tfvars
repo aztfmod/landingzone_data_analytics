@@ -1,12 +1,17 @@
+
 landingzone = {
-  backend_type = "azurerm"
-  current = {
-    level = "level3"
-    key   = "aml_landingzone"
-  }
-  lower = {
+  backend_type        = "azurerm"
+  global_settings_key = "shared_services"
+  level               = "level3"
+  key                 = "aml_landingzone"
+  tfstates = {
     shared_services = {
+      level   = "lower"
       tfstate = "caf_shared_services.tfstate"
+    }
+    networking_spoke_dap = {
+      level   = "current"
+      tfstate = "networking_spoke_data_analytics.tfstate"
     }
   }
 }
@@ -24,7 +29,20 @@ machine_learning_workspaces = {
     keyvault_key             = "aml_secrets"
     storage_account_key      = "amlstorage_re1"
     application_insights_key = "ml_app_insight"
-    sku_name                 = "Enterprise" # disabling this will set up Basic
+    #sku_name                 = "Enterprise" # Enterprise will retire in 2021 & Basic will have all features included
+       
+    compute_instances = {
+      compute_instance_re1 = {
+        computeInstanceName   = "inst25"
+        vmSize                = "Standard_DS3_v2" #[For allowed value - refer Readme.md]
+        adminUserName         = "azureuser"
+        sshAccess             = "Enabled"
+        adminUserSshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAABADAQABAAACAQC1"
+        lz_key                = "networking_spoke_dap"
+        vnet_key              = "dap_spoke_re1"
+        subnet_key            = "MachineLearningSubnet"
+      }
+    }
   }
 }
 
@@ -46,6 +64,7 @@ storage_accounts = {
     access_tier              = "Hot"
   }
 }
+
 
 keyvaults = {
   aml_secrets = {

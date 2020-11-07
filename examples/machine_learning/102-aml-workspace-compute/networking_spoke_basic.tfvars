@@ -1,28 +1,13 @@
 
-# Requires:
-# - caf_launchpad scenario 200+
-# - caf_foundations
-# - caf_neworking with 200-multi-region-hub
-
 landingzone = {
-  backend_type = "azurerm"
-  current = {
-    level = "level2"
-    key   = "dap_networking_spoke"
-    networking = {
-      networking_hub = {
-        tfstate = "caf_networking.tfstate"
-      }
-    }
-  }
-  lower = {
-    foundations = {
-      tfstate = "caf_foundations.tfstate"
-    }
-    networking = {
-      launchpad = {
-        tfstate = "caf_foundations.tfstate"
-      }
+  backend_type        = "azurerm"
+  global_settings_key = "shared_services"
+  level               = "level3"
+  key                 = "networking_spoke_dap"
+  tfstates = {
+    shared_services = {
+      level   = "lower"
+      tfstate = "caf_shared_services.tfstate"
     }
   }
 }

@@ -1,11 +1,12 @@
 ## declare here the resources for your landing zone
 
 module "caf" {
-#   source  = "aztfmod/caf-enterprise-scale/azurerm"
-#   version = "~>0.2"
-#  source  = "github.com/aztfmod/terraform-azurerm-caf?ref=0.4"
-  source  = "../"
-
+  source  = "aztfmod/caf/azurerm"
+  version = "~>0.4"
+  #source  = "github.com/aztfmod/terraform-azurerm-caf?ref=0.4"
+  # source  = "../"
+  
+  current_landingzone_key     = var.landingzone.key
   tfstates                    = local.tfstates
   tags                        = local.tags
   global_settings             = local.global_settings
@@ -47,6 +48,7 @@ module "caf" {
     # app_services                 = try(var.webapp.app_services, {})
   }
   remote_objects = {
-    networking = merge(local.lower_networking, local.current_networking)
+    #networking = merge(local.lower_networking, local.current_networking)
+    vnets = local.remote.vnets
   }
 }

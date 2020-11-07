@@ -1,28 +1,13 @@
 
-# Requires:
-# - caf_launchpad scenario 200+
-# - caf_foundations
-# - caf_neworking with 200-multi-region-hub
-
 landingzone = {
-  backend_type = "azurerm"
-  current = {
-    level = "level2"
-    key   = "dap_networking_spoke"
-    networking = {
-      networking_hub = {
-        tfstate = "caf_networking.tfstate"
-      }
-    }
-  }
-  lower = {
-    foundations = {
-      tfstate = "caf_foundations.tfstate"
-    }
-    networking = {
-      launchpad = {
-        tfstate = "caf_foundations.tfstate"
-      }
+  backend_type        = "azurerm"
+  global_settings_key = "shared_services"
+  level               = "level3"
+  key                 = "networking_spoke_dap"
+  tfstates = {
+    shared_services = {
+      level   = "lower"
+      tfstate = "caf_shared_services.tfstate"
     }
   }
 }
@@ -268,6 +253,33 @@ network_security_group_definition = {
         destination_port_range     = "443"
         source_address_prefix      = "*"
         destination_address_prefix = "AzureCloud"
+      }
+    ]
+  }
+
+  machine_learning_nsg = {
+    nsg = [
+      {
+        name                       = "aml_allow_44224",
+        priority                   = "100"
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "tcp"
+        source_port_range          = "*"
+        destination_port_range     = "44224"
+        source_address_prefix      = "AzureMachineLearning"
+        destination_address_prefix = "*"
+      },
+      {
+        name                       = "aml_allow_29876_29877",
+        priority                   = "110"
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "tcp"
+        source_port_range          = "*"
+        destination_port_range     = "29876-29877"
+        source_address_prefix      = "BatchNodeManagement"
+        destination_address_prefix = "*"
       }
     ]
   }

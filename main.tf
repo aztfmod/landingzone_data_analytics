@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.30.0"
+      version = "~> 2.33.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
@@ -47,7 +47,7 @@ provider "azurerm" {
 
 data "azurerm_client_config" "current" {}
 
-data "terraform_remote_state" "current_networking" {
+/* data "terraform_remote_state" "current_networking" {
   for_each = try(var.landingzone.current.networking, {})
 
   backend = var.landingzone.backend_type
@@ -77,16 +77,16 @@ data "terraform_remote_state" "shared_services" {
     storage_account_name = var.lower_storage_account_name
     container_name       = var.lower_container_name
     resource_group_name  = var.lower_resource_group_name
-    key                  = var.landingzone.lower.shared_services.tfstate
+    key                  = var.landingzone.tfstates.shared_services.tfstate
   }
 }
-
+ */
 
 locals {
-  landingzone_tag = {
+  /* landingzone_tag = {
     "landingzone" = basename(abspath(path.module))
   }
-  tags = merge(local.landingzone_tag, { "level" = var.landingzone.current.level }, { "environment" = local.global_settings.environment }, { "rover_version" = var.rover_version }, var.tags)
+  tags = merge(local.landingzone_tag, { "level" = var.landingzone.level }, { "environment" = local.global_settings.environment }, { "rover_version" = var.rover_version }, var.tags)
 
   global_settings = {
     prefix         = try(var.global_settings.prefix, data.terraform_remote_state.shared_services.outputs.global_settings.prefix)
@@ -110,23 +110,24 @@ locals {
   }
   current_networking = {
     for key, networking in try(var.landingzone.current.networking, {}) : key => merge(data.terraform_remote_state.current_networking[key].outputs.networking[key])
-  }
+  } */
 
 
   tfstates = merge(
-    map(var.landingzone.current.key,
+    map(var.landingzone.key,
       map(
         "storage_account_name", var.tfstate_storage_account_name,
         "container_name", var.tfstate_container_name,
         "resource_group_name", var.tfstate_resource_group_name,
         "key", var.tfstate_key,
-        "level", var.landingzone.current.level,
+        "level", var.landingzone.level,
         "tenant_id", data.azurerm_client_config.current.tenant_id,
         "subscription_id", data.azurerm_client_config.current.subscription_id
       )
     )
     ,
-    data.terraform_remote_state.shared_services.outputs.tfstates
+    #data.terraform_remote_state.shared_services.outputs.tfstates
+    data.terraform_remote_state.remote[var.landingzone.global_settings_key].outputs.tfstates
   )
   
 }

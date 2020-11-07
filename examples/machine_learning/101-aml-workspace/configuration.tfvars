@@ -1,38 +1,15 @@
 landingzone = {
-  backend_type = "azurerm"
-  current = {
-    level = "level3"
-    key   = "aml_landingzone"
-  }
-  lower = {
+  backend_type        = "azurerm"
+  global_settings_key = "shared_services"
+  level               = "level3"
+  key                 = "aml_landingzone"
+  tfstates = {
     shared_services = {
+      level   = "lower"
       tfstate = "caf_shared_services.tfstate"
-    }
-    networking = {
-      dap_networking_spoke = {  
-        tfstate = "networking_spoke_data_analytics.tfstate"
-      }
     }
   }
 }
-
-# landingzone = {
-#     backend_type          = "azurerm"
-#     global_settings_key   = "shared_services"
-#     level = "level3"
-#     key   = "aml_landingzone"
-#     tfstates = {
-#       shared_services = {
-#         level   = "lower"
-#         tfstate = "caf_shared_services.tfstate"
-#       }
-#       dap_networking_spoke = {  
-#         level   = "lower"
-#         tfstate = "networking_spoke_data_analytics.tfstate"
-#       }
-#     }
-# }
-
 
 resource_groups = {
   dap_azure_ml_re1 = {
@@ -48,22 +25,6 @@ machine_learning_workspaces = {
     storage_account_key      = "amlstorage_re1"
     application_insights_key = "ml_app_insight"
     sku_name                 = "Enterprise" # disabling this will set up Basic
-    
-    networking = {
-      lz_key      = "dap_networking_spoke"  
-      vnet_key              = "dap_spoke_re1"
-    }
-    
-    compute_instances = {
-      compute_instance_re1 = {
-        computeInstanceName   = "inst25"
-        vmSize                = "Standard_DS3_v2" #[For allowed value - refer Readme.md]
-        adminUserName         = "azureuser"
-        sshAccess             = "Enabled"
-        adminUserSshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAABADAQABAAACAQC1"
-        subnet_key            = "MachineLearningSubnet"
-      }
-    }
   }
 }
 
@@ -85,7 +46,6 @@ storage_accounts = {
     access_tier              = "Hot"
   }
 }
-
 
 keyvaults = {
   aml_secrets = {
