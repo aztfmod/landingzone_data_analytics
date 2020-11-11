@@ -18,13 +18,13 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 ## Components deployed by this example
 
-| Component                | Type of resource                 | Purpose                                                        |
-|--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the cluster and the compute resources   |
-| machine learning workspace| Workspace                        | Machine Learning workspace                                    |
-| compute instance         | Compute                          | Datascience sandbox                                            |
-| compute cluster          | Dustributed compute clsuter      | distributed coumpute cluster                                   |
-| inference clsuter        | compute                          | Kubernetes cluster for model deployment                        |
+| Component                  | Type of resource            | Purpose                                                      |
+|----------------------------|-----------------------------|--------------------------------------------------------------|
+| resource group             | Resource group              | resource group to host the cluster and the compute resources |
+| machine learning workspace | Workspace                   | Machine Learning workspace                                   |
+| compute instance           | Compute                     | Datascience sandbox                                          |
+| compute cluster            | Dustributed compute clsuter | distributed coumpute cluster                                 |
+| inference clsuter          | compute                     | Kubernetes cluster for model deployment                      |
 
 ## Deploying this example
 
@@ -46,8 +46,8 @@ export example="102-aml-workspace-compute"
 rover -lz /tf/caf/landingzone_data_analytics \
       -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/configuration.tfvars \
       -tfstate machine_learning_101.tfstate \
-	   -env ${environment} \
-       -level level3 \
+	-env ${environment} \
+      -level level3 \
       -a [plan|apply]
 ```
 

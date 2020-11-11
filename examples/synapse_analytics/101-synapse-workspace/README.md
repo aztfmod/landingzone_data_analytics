@@ -18,10 +18,10 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 ## Components deployed by this example
 
-| Component                | Type of resource                 | Purpose                                                        |
-|--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the workspace                           |
-| synapse workspace        | Workspace                        | synapse workspace                                              |
+| Component         | Type of resource | Purpose                              |
+|-------------------|------------------|--------------------------------------|
+| resource group    | Resource group   | resource group to host the workspace |
+| synapse workspace | Workspace        | synapse workspace                    |
 
 
 ## Deploying this example

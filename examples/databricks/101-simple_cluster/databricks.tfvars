@@ -1,11 +1,17 @@
-level = "level3"
-
-tfstates = {
-  caf_foundations = {
-    tfstate = "caf_foundations.tfstate"
-  }
-  networking = {
-    tfstate = "networking_spoke_databricks.tfstate"
+landingzone = {
+  backend_type        = "azurerm"
+  global_settings_key = "shared_services"
+  level               = "level3"
+  key                 = "databricks_networking_spoke"
+  tfstates = {
+    shared_services = {
+      level   = "lower"
+      tfstate = "caf_shared_services.tfstate"
+    }
+    databricks_networking_spoke = {
+      level   = "current"
+      tfstate = "networking_spoke_data_analytics.tfstate"
+    }
   }
 }
 
@@ -16,7 +22,6 @@ resource_groups = {
   }
 }
 
-
 databricks_workspaces = {
   sales_workspaces = {
     name               = "sales_workspace"
@@ -24,12 +29,9 @@ databricks_workspaces = {
     sku                = "standard"
     custom_parameters = {
       no_public_ip       = false
-      remote_tfstate = {
-        tfstate_key = "databricks_networking_spoke"
-        output_key  = "vnets"
-        lz_key      = "databricks_networking_spoke"
-        vnet_key    = "vnet_spoke_data_re1"
-      }
+      output_key         = "vnets"
+      lz_key             = "databricks_networking_spoke"
+      vnet_key           = "vnet_spoke_data_re1"
       public_subnet_key  = "databricks_public"
       private_subnet_key = "databricks_private"
     }

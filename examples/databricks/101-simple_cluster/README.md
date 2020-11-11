@@ -18,11 +18,11 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 ## Components deployed by this example
 
-| Component                | Type of resource                 | Purpose                                                        |
-|--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the cluster and the node pool resources |
-| databricks cluster       | Workspace                        | Databricks clsuter                                             |
-| instance pool            | Compute                          | Compute load for worker                                        |
+| Component          | Type of resource | Purpose                                                        |
+|--------------------|------------------|----------------------------------------------------------------|
+| resource group     | Resource group   | resource group to host the cluster and the node pool resources |
+| databricks cluster | Workspace        | Databricks clsuter                                             |
+| instance pool      | Compute          | Compute load for worker                                        |
 
 ## Deploying this example
 
@@ -39,26 +39,36 @@ export environment=[YOUR_ENVIRONMENT]
 
 ```bash
 # Set the folder name of this example
-example=101-single-cluster
+example=101-simple_cluster
 
 # The Databricks construction set is banse
-export base_landingzone_tfstate_name="databricks_workspace.tfstate"
+base_landingzone_tfstate_name="databricks_workspace.tfstate"
+
+# Deploy the spoke virtual network for Databricks
+
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+      -var-folder /tf/caf/examples/databricks/${example}/networking_spoke \
+      -tfstate networking_spoke_data_analytics.tfstate \
+      -env ${environment} \
+	-level level3 \
+      -a [plan|apply|destroy]
+
 # Deploy Azure services for Databricks workspace
 rover -lz /tf/caf \
-      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
-      -tfstate ${base_landingzone_tfstate_name} \
-       -env ${environment} \
-       -level level3 \
-      -a [plan|apply]
-      
-      # Configure the Databricks cluster
+      -var-folder /tf/caf/examples/databricks/${example} \
+      -tfstate ${base_landingzone_tfstate_name}.tfstate \
+      -env ${environment} \
+      -level level3 \
+      -a [plan|apply|destroy]
+
+# Configure the Databricks cluster with the databricks provider
 rover -lz /tf/caf/add-ons/databricks \
-      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
+      -var-folder /tf/caf/examples/databricks/${example} \
       -tfstate databricks.tfstate \
-      -var tfstate_key=${base_landingzone_tfstate_name} \
-        -env ${environment} \
-       -level level3 \
-      -a apply
+      -var tfstate_key=${base_landingzone_tfstate_name}.tfstate \
+      -env ${environment} \
+      -level level3 \
+      -a [plan|apply|destroy]
 ```
 
 ## Destroy an DAP landing zone deployment

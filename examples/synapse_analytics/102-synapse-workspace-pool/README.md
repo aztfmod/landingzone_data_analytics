@@ -18,13 +18,12 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 ## Components deployed by this example
 
-| Component                | Type of resource                 | Purpose                                                        |
-|--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the workspace and instance pools        |
-| synapse workspace        | Workspace                        | synapse workspace                                              |
-| spark pool               | compute                          | spark compute cluster                                          |
-| sql pool                 | compute                          | sql compute cluster                                            |
-
+| Component         | Type of resource | Purpose                                                 |
+|-------------------|------------------|---------------------------------------------------------|
+| resource group    | Resource group   | resource group to host the workspace and instance pools |
+| synapse workspace | Workspace        | synapse workspace                                       |
+| spark pool        | compute          | spark compute cluster                                   |
+| sql pool          | compute          | sql compute cluster                                     |
 
 ## Deploying this example
 

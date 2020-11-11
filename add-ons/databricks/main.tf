@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.27.0"
+      version = "~> 2.33.0"
     }
     azurecaf = {
       source  = "aztfmod/azurecaf"
@@ -39,11 +39,10 @@ data "terraform_remote_state" "landingzone" {
 locals {
   caf = data.terraform_remote_state.landingzone.outputs.caf
 
-  tags = merge(var.tags, { "level" = var.level }, { "environment" = var.environment }, { "rover_version" = var.rover_version })
+  tags = merge(var.tags, { "level" = try(var.landingzone.level, {}) }, { "environment" = var.environment }, { "rover_version" = var.rover_version })
 
   global_settings = {
     prefix         = data.terraform_remote_state.landingzone.outputs.global_settings.prefix
-    convention     = try(var.global_settings.convention, data.terraform_remote_state.landingzone.outputs.global_settings.convention)
     default_region = try(var.global_settings.default_region, data.terraform_remote_state.landingzone.outputs.global_settings.default_region)
     environment    = data.terraform_remote_state.landingzone.outputs.global_settings.environment
     regions        = try(var.global_settings.regions, data.terraform_remote_state.landingzone.outputs.global_settings.regions)
@@ -58,13 +57,13 @@ locals {
   }
 
   tfstates = merge(
-    map(var.landingzone_name,
+    map(var.landingzone.key,
       map(
         "storage_account_name", var.tfstate_storage_account_name,
         "container_name", var.tfstate_container_name,
         "resource_group_name", var.tfstate_resource_group_name,
         "key", var.tfstate_key,
-        "level", var.level,
+        "level", var.landingzone.level,
         "tenant_id", data.azurerm_client_config.current.tenant_id,
         "subscription_id", data.azurerm_client_config.current.subscription_id
       )

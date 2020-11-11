@@ -18,11 +18,10 @@ This example will sit on the [prerequisites environment](../../readme.md) and wi
 
 ## Components deployed by this example
 
-| Component                | Type of resource                 | Purpose                                                        |
-|--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the cluster and the compute resources   |
-| Machin Learning Workspace| Workspace                        | machine learning workspace                                     |
-                            
+| Component                  | Type of resource | Purpose                                                      |
+|----------------------------|------------------|--------------------------------------------------------------|
+| resource group             | Resource group   | resource group to host the cluster and the compute resources |
+| Machine Learning Workspace | Workspace        | machine learning workspace                                   |
 
 ## Deploying this example
 
