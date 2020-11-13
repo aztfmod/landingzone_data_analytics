@@ -333,7 +333,7 @@ jobs:
     name: foundations_destroy
     runs-on: ubuntu-latest
     if: always()
-    needs: examples
+    needs: [destroy_shared_services, destroy_networking_hub]
 
     container:
       image: aztfmod/rover:2010.2808
