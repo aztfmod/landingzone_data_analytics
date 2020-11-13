@@ -225,7 +225,7 @@ jobs:
 
       - name: deploy databricks_cluster
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/add-ons/databricks -a apply \
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
@@ -234,7 +234,7 @@ jobs:
 
       - name: destroy databricks_cluster
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/add-ons/databricks -a destroy \
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
