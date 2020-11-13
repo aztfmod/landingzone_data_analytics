@@ -229,20 +229,24 @@ jobs:
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
+            -var tfstate_key=${{base_landingzone_tfstate_name}} \
             '-var tags={testing_job_id="${{ github.run_id }}"}' \
             --environment ${{ github.run_id }}
 
       - name: destroy databricks_cluster
+        if: always()
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/add-ons/databricks -a destroy \
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
+            -var tfstate_key=${{base_landingzone_tfstate_name}} \
             '-var tags={testing_job_id="${{ github.run_id }}"}' \
             --environment ${{ github.run_id }} \
             -auto-approve
 
       - name: destroy databricks_workspace
+        if: always()
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
             -level level3 \
@@ -253,6 +257,7 @@ jobs:
             -auto-approve
 
       - name: destroy networking_spoke
+        if: always()
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a destroy \
             -level level3 \
@@ -265,6 +270,7 @@ jobs:
   destroy_shared_services:
     name: destroy_shared_services
     runs-on: ubuntu-latest
+    if: always()
 
     needs: databricks
 
@@ -302,6 +308,7 @@ jobs:
   destroy_networking_hub:
     name: destroy_networking_hub
     runs-on: ubuntu-latest
+    if: always()
 
     needs: databricks
 
