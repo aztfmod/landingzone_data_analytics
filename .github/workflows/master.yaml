@@ -51,15 +51,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
-
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@master
         with:
-          directory: "/tf/caf"
-          #skip_check: CKV_AWS_1 # optional: skip a specific check_id
-          quiet: true # optional: display only failed checks
-          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          quiet: true
+          framework: terraform
 
   foundations:
     name: foundations
@@ -210,7 +207,7 @@ jobs:
 
       - name: deploy networking_spoke
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}//public/landingzones/caf_networking -a apply \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a apply \
             -level level3 \
             -tfstate ${{ env.networking_spoke_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }}/networking_spoke \
@@ -219,7 +216,7 @@ jobs:
 
       - name: deploy databricks_workspace
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/examples -a apply \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
             -level level3 \
             -tfstate ${{ env.base_landingzone_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
@@ -228,7 +225,7 @@ jobs:
 
       - name: deploy databricks_cluster
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/examples -a apply \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
@@ -237,7 +234,7 @@ jobs:
 
       - name: destroy databricks_cluster
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/examples -a destroy \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
@@ -247,7 +244,7 @@ jobs:
 
       - name: destroy databricks_workspace
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/examples -a destroy \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
             -level level3 \
             -tfstate ${{ env.databricks_cluster_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
@@ -257,7 +254,7 @@ jobs:
 
       - name: destroy networking_spoke
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}//public/landingzones/caf_networking -a destroy \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a destroy \
             -level level3 \
             -tfstate ${{ env.networking_spoke_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }}/networking_spoke \
