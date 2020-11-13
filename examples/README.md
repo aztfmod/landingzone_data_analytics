@@ -38,7 +38,7 @@ Once into the development environment, please use the following steps:
 # Login the Azure subscription
 rover login -t [TENANT_ID/TENANT_NAME] -s [SUBSCRIPTION_GUID]
 # Environment is needed to be defined, otherwise the below LZs will land into sandpit which someone else is working on
-export environment=[YOUR_ENVIRONMENT]
+export environment=[your_environment_name]
 git clone -b 2010.0.0 https://github.com/Azure/caf-terraform-landingzones.git /tf/caf/public
 
 ```
@@ -49,7 +49,7 @@ git clone -b 2010.0.0 https://github.com/Azure/caf-terraform-landingzones.git /t
 # Add the launchpad landingzone if not yet deployed
 rover -lz /tf/caf/public/landingzones/caf_launchpad \
   -launchpad \
-  -level level0
+  -level level0 \
   -var-folder /tf/caf/public/landingzones/caf_launchpad/scenario/100 \
   -env ${environment} \
   -a [plan|apply|destroy]
