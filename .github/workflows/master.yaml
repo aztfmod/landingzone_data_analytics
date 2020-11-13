@@ -250,7 +250,7 @@ jobs:
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
             -level level3 \
-            -tfstate ${{ env.databricks_cluster_tfstate_name }} \
+            -tfstate ${{ env.base_landingzone_tfstate_name }} \
             -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
             '-var tags={testing_job_id="${{ github.run_id }}"}' \
             --environment ${{ github.run_id }} \
