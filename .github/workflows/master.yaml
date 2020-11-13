@@ -45,6 +45,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  checkov:
+    name: checkov-action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${GITHUB_WORKSPACE}
+          #skip_check: CKV_AWS_1 # optional: skip a specific check_id
+          quiet: true # optional: display only failed checks
+          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+
   foundations:
     name: foundations
     runs-on: ubuntu-latest
@@ -122,8 +138,6 @@ jobs:
             -level level2 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
-            '-var random_length=${{ matrix.random_length }}' \
-            '-var prefix=g${{ github.run_id }}' \
             '-var tags={testing_job_id="${{ github.run_id }}"}'
 
   networking_hub:
@@ -159,8 +173,6 @@ jobs:
             -level level2 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
-            '-var random_length=${{ matrix.random_length }}' \
-            '-var prefix=g${{ github.run_id }}' \
             '-var tags={testing_job_id="${{ github.run_id }}"}'
 
   databricks:
@@ -284,9 +296,6 @@ jobs:
             -level level2 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
-            '-var random_length=${{ matrix.random_length }}' \
-            '-var prefix=g${{ github.run_id }}' \
-            '-var regions={region1="${{ matrix.region }}"}' \
             '-var tags={testing_job_id="${{ github.run_id }}"}' \
             -auto-approve
 
@@ -324,8 +333,6 @@ jobs:
             -level level2 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
-            '-var random_length=${{ matrix.random_length }}' \
-            '-var prefix=g${{ github.run_id }}' \
             '-var tags={testing_job_id="${{ github.run_id }}"}' \
             -auto-approve
 
