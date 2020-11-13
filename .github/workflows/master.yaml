@@ -41,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Terraform security scan
-        uses: triat/terraform-security-scan@v2.0.1
+        uses: triat/terraform-security-scan@v2.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -83,7 +83,7 @@ jobs:
 
       - name: foundations
         run: |
-          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/landingzones/caf_foundations -a apply \
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_foundations -a apply \
             -level level1 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
@@ -277,7 +277,7 @@ jobs:
 
           echo "local user: $(whoami)"
 
-      - name: shared_services
+      - name: destroy_shared_services
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services -a destroy \
             -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services/scenario/100 \
@@ -317,7 +317,7 @@ jobs:
 
           echo "local user: $(whoami)"
 
-      - name: networking_hub
+      - name: destroy_networking_hub
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a destroy \
             -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_networking/scenario/101-multi-region-hub \
@@ -353,7 +353,16 @@ jobs:
 
           echo "local user: $(whoami)"
 
-      - name: Remove launchpad
+      - name: destroy foundations
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_foundations -a destroy \
+            -level level1 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            -auto-approve
+
+      - name: destroy launchpad
         run: |
 
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_launchpad/ -a destroy \
