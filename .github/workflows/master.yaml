@@ -56,7 +56,7 @@ jobs:
         id: checkov
         uses: bridgecrewio/checkov-action@master
         with:
-          directory: ${GITHUB_WORKSPACE}
+          directory: "/tf/caf"
           #skip_check: CKV_AWS_1 # optional: skip a specific check_id
           quiet: true # optional: display only failed checks
           framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
@@ -135,6 +135,7 @@ jobs:
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services -a apply \
             -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services/scenario/100 \
+            -tfstate caf_shared_services.tfstate \
             -level level2 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
@@ -170,6 +171,7 @@ jobs:
         run: |
           /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a apply \
             -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_networking/scenario/101-multi-region-hub \
+            -tfstate networking_hub.tfstate \
             -level level2 \
             -parallelism=30 \
             --environment ${{ github.run_id }} \
