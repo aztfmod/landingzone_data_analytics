@@ -8,5 +8,5 @@
 **/~*.*
 **/*.log
 **/backend.azurerm.tf
-landingzones
+aztfmod
 public
