@@ -267,58 +267,58 @@ jobs:
             --environment ${{ github.run_id }} \
             -auto-approve
 
-    synapse_analytics:
-      name: synapse_analytics
-      runs-on: ubuntu-latest
+  synapse_analytics:
+    name: synapse_analytics
+    runs-on: ubuntu-latest
 
-      needs: [networking_hub, shared_services]
+    needs: [networking_hub, shared_services]
 
-      strategy:
-        fail-fast: false
-        matrix:
-            example: [
-              "101-synapse-workspace",
-              "102-synapse-workspace-pool"
-            ]
+    strategy:
+      fail-fast: false
+      matrix:
+          example: [
+            "101-synapse-workspace",
+            "102-synapse-workspace-pool"
+          ]
 
-      container:
-        image: aztfmod/rover:2010.2808
-        options: --user 0
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
 
-      steps:
-        - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-        - uses: actions/checkout@v2
-          with:
-            repository: Azure/caf-terraform-landingzones
-            path: public
-            ref: '2010.0.0'
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.0'
 
-        - name: Login azure
-          run: |
-            az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
-            az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
 
-        - name: deploy synapse_analytics
-          run: |
-            /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
-              -level level3 \
-              -tfstate ${{ matrix.example }}.tfstate \
-              -var-folder ${GITHUB_WORKSPACE}/examples/synapse_analytics/${{ matrix.example }} \
-              '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              --environment ${{ github.run_id }}
+      - name: deploy synapse_analytics
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
+            -level level3 \
+            -tfstate ${{ matrix.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/synapse_analytics/${{ matrix.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
 
 
-        - name: destroy synapse_analytics
-          if: always()
-          run: |
-            /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
-              -level level3 \
-              -tfstate ${{ matrix.example }}.tfstate \
-              -var-folder ${GITHUB_WORKSPACE}/examples/synapse_analytics/${{ matrix.example }} \
-              '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              --environment ${{ github.run_id }} \
-              -auto-approve
+      - name: destroy synapse_analytics
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
+            -level level3 \
+            -tfstate ${{ matrix.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/synapse_analytics/${{ matrix.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
 
   destroy_shared_services:
     name: destroy_shared_services
