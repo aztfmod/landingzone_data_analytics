@@ -320,8 +320,8 @@ jobs:
             --environment ${{ github.run_id }} \
             -auto-approve
 
-  machine_learning(102-aml-workspace-compute):
-    name: machine_learning(102-aml-workspace-compute)
+  machine_learning_102_aml_workspace_compute:
+    name: machine_learning_102_aml_workspace_compute
     runs-on: ubuntu-latest
 
     needs: [networking_hub, shared_services]
@@ -387,8 +387,9 @@ jobs:
             '-var tags={testing_job_id="${{ github.run_id }}"}' \
             --environment ${{ github.run_id }} \
             -auto-approve
-  machine_learning(101-aml-workspace):
-    name: machine_learning(101-aml-workspace)
+
+  machine_learning_101_aml_workspace:
+    name: machine_learning_101_aml_workspace
     runs-on: ubuntu-latest
 
     needs: [networking_hub, shared_services]
@@ -439,7 +440,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
 
-    needs: databricks
+    needs: [databricks, synapse_analytics, machine_learning_102_aml_workspace_compute, machine_learning_101_aml_workspace]
 
     container:
       image: aztfmod/rover:2010.2808
@@ -477,7 +478,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
 
-    needs: databricks
+    needs: [databricks, synapse_analytics, machine_learning_102_aml_workspace_compute, machine_learning_101_aml_workspace]
 
     container:
       image: aztfmod/rover:2010.2808
