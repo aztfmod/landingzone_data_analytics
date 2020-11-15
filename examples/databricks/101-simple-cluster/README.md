@@ -39,7 +39,7 @@ export environment=[YOUR_ENVIRONMENT]
 
 ```bash
 # Set the folder name of this example
-example=101-simple_cluster
+example=101-simple-cluster
 
 # The Databricks construction set is banse
 base_landingzone_tfstate_name="databricks_workspace.tfstate"
