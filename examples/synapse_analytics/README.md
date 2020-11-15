@@ -8,13 +8,13 @@ For a review of the hierarchy approach of Cloud Adoption Framework for Azure lan
 
 ## Prerequisites
 
-Before running this example, please make sure you have setup your environment as described in the [following guide](../../readme.md)
+Before running this example, please make sure you have setup your environment as described in the [following guide](../../README.md)
 
 ## Architecture diagram
 
-This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
+This example will sit on the [prerequisites environment](../../README.md) and will allow you to deploy the following additional topology:
 
-![solutions](../../../_images/examples/synapse-modern-data-architecture.png)
+![solutions](../../_images/examples/synapse-modern-data-architecture.png)
 
 ## Components deployed by this example
 
