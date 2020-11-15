@@ -12,7 +12,7 @@ Before running this example, please make sure you have setup your environment as
 
 ## Architecture diagram
 
-This example will sit on the [prerequisites environment](../readme.md) and will allow you to deploy the following additional topology:
+This example will sit on the [prerequisites environment](../../README.md) and will allow you to deploy the following additional topology:
 
 ![solutions](../../../_images/examples/101-databricks-architecture.png)
 
