@@ -4,7 +4,7 @@ Deploys a Databrics Cluster in a virtual network, with instance pool.
 
 DAP landing zone operates at **level 3**.
 
-For a review of the hierarchy approach of Cloud Adoption Framework for Azure landing zones on Terraform, you can refer to [the following documentation](../../../../documentation/code_architecture/hierarchy.md).
+For a review of the hierarchy approach of Cloud Adoption Framework for Azure landing zones on Terraform, you can refer to [the following documentation](https://github.com/Azure/caf-terraform-landingzones/blob/master/documentation/code_architecture/hierarchy.md).
 
 ## Prerequisites
 
