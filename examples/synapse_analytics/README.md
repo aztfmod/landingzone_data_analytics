@@ -1,6 +1,6 @@
-# CAF landing zones for Terraform - Databricks Cluster example
+# CAF landing zones for Terraform - Synaspe Analytics example
 
-Deploys a Databrics Cluster in a virtual network, with instance pool.
+Deploys a Synapse workspace, with sparkp  pool and SQL pool in virtual network.
 
 DAP landing zone operates at **level 3**.
 
@@ -14,15 +14,16 @@ Before running this example, please make sure you have setup your environment as
 
 This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
 
-![solutions](../../../_images/examples/101-databricks-architecture.png)
+![solutions](../../../_images/examples/synapse-modern-data-architecture.png)
 
 ## Components deployed by this example
 
-| Component                | Type of resource                 | Purpose                                                        |
-|--------------------------|----------------------------------|----------------------------------------------------------------|
-| resource group           | Resource group                   | resource group to host the cluster and the node pool resources |
-| databricks cluster       | Workspace                        | Databricks clsuter                                             |
-| instance pool            | Compute                          | Compute load for worker                                        |
+| Component         | Type of resource | Purpose                                                 |
+|-------------------|------------------|---------------------------------------------------------|
+| resource group    | Resource group   | resource group to host the workspace and instance pools |
+| synapse workspace | Workspace        | synapse workspace                                       |
+| spark pool        | compute          | spark compute cluster                                   |
+| sql pool          | compute          | sql compute cluster                                     |
 
 ## Deploying this example
 
@@ -35,30 +36,18 @@ rover login -t [TENANT_ID/TENANT_NAME] -s [SUBSCRIPTION_GUID]
 export environment=[YOUR_ENVIRONMENT]
 ```
 
-## Run DAP landing zone deployment
+## Deploy Azure services for Synapse Workspace
 
 ```bash
 # Set the folder name of this example
-example=101-single-cluster
+export example="102-synapse-workspace-pool"
 
-# The Databricks construction set is banse
-export base_landingzone_tfstate_name="databricks_workspace.tfstate"
-# Deploy Azure services for Databricks workspace
-rover -lz /tf/caf \
-      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
-      -tfstate ${base_landingzone_tfstate_name} \
-       -env ${environment} \
+rover -lz /tf/caf/landingzone_data_analytics \
+      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/configuration.tfvars \
+      -tfstate machine_learning_101.tfstate \
+	 -env ${environment} \
        -level level3 \
       -a [plan|apply]
-      
-      # Configure the Databricks cluster
-rover -lz /tf/caf/add-ons/databricks \
-      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
-      -tfstate databricks.tfstate \
-      -var tfstate_key=${base_landingzone_tfstate_name} \
-        -env ${environment} \
-       -level level3 \
-      -a apply
 ```
 
 ## Destroy an DAP landing zone deployment
@@ -67,12 +56,12 @@ Have fun playing with the landing zone an once you are done, you can simply dele
 
 ```bash
 # Set the folder name of this example
-example=101-single-cluster
+export example="102-synapse-workspace-pool"
 
-rover -lz /tf/caf \
-      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
-      -tfstate ${base_landingzone_tfstate_name} \
-       -env ${environment} \
+rover -lz /tf/caf/landingzone_data_analytics \
+      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/configuration.tfvars \
+      -tfstate machine_learning_101.tfstate \
+	 -env ${environment} \
        -level level3 \
        -a destroy -auto-approve
 ```
