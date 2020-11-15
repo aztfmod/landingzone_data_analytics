@@ -8,7 +8,7 @@ For a review of the hierarchy approach of Cloud Adoption Framework for Azure lan
 
 ## Prerequisites
 
-Before running this example, please make sure you have setup your environment as described in the [following guide](../../readme.md)
+Before running this example, please make sure you have setup your environment as described in the [following guide](../../README.md)
 
 ## Architecture diagram
 
