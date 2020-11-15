@@ -25,6 +25,13 @@ This example will sit on the [prerequisites environment](../../README.md) and wi
 | spark pool        | compute          | spark compute cluster                                   |
 | sql pool          | compute          | sql compute cluster                                     |
 
+## Examples
+
+| Scenario                    | Description                                                               |
+|-------------------          |---------------------------------------------------------------------------|
+| 101-synapse-workspace       | Set up Simple Synaspe workspace with serverless SQL pool                  |
+| 102-synapse-workspace-pool  | Set up workspace with SQL pool / Spark pool dedicated capacity            |
+
 ## Deploying this example
 
 Ensure the below is set prior to apply or destroy.
@@ -39,29 +46,31 @@ export environment=[YOUR_ENVIRONMENT]
 ## Deploy Azure services for Synapse Workspace
 
 ```bash
-# Set the folder name of this example
-export example="102-synapse-workspace-pool"
+# Set the folder name - for simple workspace with serverless compute
+export example="101-synapse-workspace"   
 
+# Set the folder name - for workspace with dedicated spark or sql pool
+export example="102-synapse-workspace-pool"   
+
+	  
 rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/configuration.tfvars \
-      -tfstate machine_learning_101.tfstate \
-	 -env ${environment} \
-       -level level3 \
+      -var-file /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example}/configuration.tfvars \
+      -tfstate synapse_analytics.tfstate \
+      -env ${environment} \
+	  -level level3 \
       -a [plan|apply]
+      
 ```
 
 ## Destroy an DAP landing zone deployment
 
 Have fun playing with the landing zone an once you are done, you can simply delete the deployment using:
 
-```bash
-# Set the folder name of this example
-export example="102-synapse-workspace-pool"
-
+```bash       
 rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/configuration.tfvars \
-      -tfstate machine_learning_101.tfstate \
-	 -env ${environment} \
-       -level level3 \
-       -a destroy -auto-approve
+      -var-file /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example}/configuration.tfvars \
+      -tfstate synapse_analytics.tfstate \
+      -env ${environment} \
+	  -level level3 \
+      -a destroy -auto-approve     
 ```
