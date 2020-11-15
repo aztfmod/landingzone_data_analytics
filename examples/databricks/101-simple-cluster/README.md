@@ -12,7 +12,7 @@ Before running this example, please make sure you have setup your environment as
 
 ## Architecture diagram
 
-This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
+This example will sit on the [prerequisites environment](../../../readme.md) and will allow you to deploy the following additional topology:
 
 ![solutions](../../../_images/examples/101-databricks-architecture.png)
 
@@ -35,43 +35,44 @@ rover login -t [TENANT_ID/TENANT_NAME] -s [SUBSCRIPTION_GUID]
 export environment=[YOUR_ENVIRONMENT]
 ```
 
-## Run DAP landing zone deployment
+## Run Databricks landing zone deployment
 
 ```bash
 # Set the folder name of this example
 example=101-simple-cluster
 
 # The Databricks construction set is banse
-base_landingzone_tfstate_name="databricks_workspace.tfstate"
+export base_landingzone_tfstate_name="databricks_workspace.tfstate"
 
 # Deploy the spoke virtual network for Databricks
 
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
-      -var-folder /tf/caf/examples/databricks/${example}/networking_spoke \
-      -tfstate networking_spoke_data_analytics.tfstate \
+      -var-file /tf/caf/landingzone_data_analytics/examples/databricks/${example}/networking_spoke/networking_spoke.tfvars \
+      -tfstate networking_spoke_databricks.tfstate \
       -env ${environment} \
 	-level level3 \
       -a [plan|apply|destroy]
-
+      
 # Deploy Azure services for Databricks workspace
-rover -lz /tf/caf \
-      -var-folder /tf/caf/examples/databricks/${example} \
+rover -lz /tf/caf/landingzone_data_analytics \
+      -var-file /tf/caf/landingzone_data_analytics/examples/databricks/${example}/databricks.tfvars \
       -tfstate ${base_landingzone_tfstate_name}.tfstate \
       -env ${environment} \
-      -level level3 \
+	-level level3 \
       -a [plan|apply|destroy]
-
+      
 # Configure the Databricks cluster with the databricks provider
-rover -lz /tf/caf/add-ons/databricks \
-      -var-folder /tf/caf/examples/databricks/${example} \
-      -tfstate databricks.tfstate \
+rover -lz /tf/caf/landingzone_data_analytics/add-ons/databricks \
+      -var-file /tf/caf/landingzone_data_analytics/examples/databricks/${example}/databricks.tfvars \
+      -tfstate databricks_cluster.tfstate \
       -var tfstate_key=${base_landingzone_tfstate_name}.tfstate \
       -env ${environment} \
-      -level level3 \
+	-level level3 \
       -a [plan|apply|destroy]
+      
 ```
 
-## Destroy an DAP landing zone deployment
+## Destroy an Databricks landing zone deployment
 
 Have fun playing with the landing zone an once you are done, you can simply delete the deployment using:
 
@@ -79,7 +80,7 @@ Have fun playing with the landing zone an once you are done, you can simply dele
 # Set the folder name of this example
 example=101-single-cluster
 
-rover -lz /tf/caf \
+rover -lz /tf/caf/landingzone_data_analytics/databricks \
       -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
       -tfstate ${base_landingzone_tfstate_name} \
        -env ${environment} \
