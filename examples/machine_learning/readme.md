@@ -14,4 +14,4 @@ Before running this example, please make sure you have setup your environment as
 
 This example will sit on the [prerequisites environment](../../readme.md) and will allow you to deploy the following additional topology:
 
-![solutions](../../../_images/examples/aml-architecture.svg)
+![solutions](../../_images/examples/aml-architecture.svg)
