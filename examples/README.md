@@ -18,7 +18,7 @@ For a review of the hierarchy approach of Cloud Adoption Framework for Azure lan
 |---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
 | [101-single-cluster](./databricks/101-simple-cluster)| Provision simple databricks cluster |
 | [101-aml-workspace](./machine_learning/101-aml-workspace)| Provision simple machine learning workspace |
-| [102-aml-workspace-compute](./machine_learning/103-multi-clusters102-aml-workspace-compute)| Provision machine learning workspace with compute instance                   |
+| [102-aml-workspace-compute](./machine_learning/102-aml-workspace-compute)| Provision machine learning workspace with compute instance                   |
 | [101-synapse-workspace](./synapse_analytics/101-synapse-workspace)| Provision simple Synapse workspace with serverless compute |
 | [102-synapse-workspace-pool](./synapse_analytics/102-synapse-workspace-pool)| Provision Synapse workspace with dedicated SQL pool and Spark pool |
 
