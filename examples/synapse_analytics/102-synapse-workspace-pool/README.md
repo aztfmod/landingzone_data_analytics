@@ -21,9 +21,6 @@ export environment=[YOUR_ENVIRONMENT]
 ## Deploy Azure services for Synapse Workspace
 
 ```bash
-# Set the folder name - for simple workspace with serverless compute
-export example="101-synapse-workspace"   
-
 # Set the folder name - for workspace with dedicated spark or sql pool
 export example="102-synapse-workspace-pool"   
 
