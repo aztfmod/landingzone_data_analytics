@@ -12,17 +12,6 @@ DAP landing zone operates at **level 3**, so before you are able to deploy them 
 
 For a review of the hierarchy approach of Cloud Adoption Framework for Azure landing zones on Terraform, you can refer to [the following documentation](https://github.com/Azure/caf-terraform-landingzones/blob/master/documentation/code_architecture/hierarchy.md).
 
-### Core DAP landing zone (level 3)
-
-| DAP landing zone example                                                                                              | Description                                                |
-|---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
-| [101-single-cluster](./databricks/101-simple-cluster)| Provision simple databricks cluster |
-| [101-aml-workspace](./machine_learning/101-aml-workspace)| Provision simple machine learning workspace |
-| [102-aml-workspace-compute](./machine_learning/102-aml-workspace-compute)| Provision machine learning workspace with compute instance                   |
-| [101-synapse-workspace](./synapse_analytics/101-synapse-workspace)| Provision simple Synapse workspace with serverless compute |
-| [102-synapse-workspace-pool](./synapse_analytics/102-synapse-workspace-pool)| Provision Synapse workspace with dedicated SQL pool and Spark pool |
-
-
 ## Setting up your test environment
 
 With the following steps, you can deploy a simplified enterprise framework that setups the minimal foundations for enterprise (levels 0-2)
@@ -96,7 +85,7 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
 This deployment adds the following components:
 ![caf_layers](https://raw.githubusercontent.com/aztfmod/landingzone_aks/master/_pictures/examples/101-multi-region-hub.png)
 
-<!-- ### Apply network spoke (level 3)
+### Apply network spoke (level 3)
 
 ```bash
 # Deploy networking spoke for Data Analytics Platform (DAP)
@@ -107,15 +96,18 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
       -env ${environment} \
 	    -level level3 \
   -a [plan|apply|destroy]
-
-``` -->
+```
 
 Once the previous steps have been completed, the deployment of the lightweight enterprise scaffold to execute the DAP example landingzones is ready and you can step to one of the examples.
 
-### Example scenarios
+### Core DAP landing zone (level 3)
 
-| scenario                                 | description |
-|------------------------------------------|-------------|
-| [databricks](./databricks)               |             |
-| [machine learning](./machine_learning)   |             |
-| [synapse analytics](./synapse_analytics) |             |
+| DAP landing zone example                                                                          | Description                                                |
+|---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| [101-single-cluster](./databricks/101-simple-cluster)| Provision simple databricks cluster |
+| [101-aml-workspace](./machine_learning/101-aml-workspace)| Provision simple machine learning workspace |
+| [102-aml-workspace-compute](./machine_learning/102-aml-workspace-compute)| Provision machine learning workspace with compute instance                   |
+| [101-synapse-workspace](./synapse_analytics/101-synapse-workspace)| Provision simple Synapse workspace with serverless compute |
+| [102-synapse-workspace-pool](./synapse_analytics/102-synapse-workspace-pool)| Provision Synapse workspace with dedicated SQL pool and Spark pool |
+
+
