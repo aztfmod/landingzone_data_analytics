@@ -98,9 +98,9 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
   -a [plan|apply|destroy]
 ```
 
-Once the previous steps have been completed, the deployment of the lightweight enterprise scaffold to execute the DAP example landingzones is ready and you can step to one of the examples.
-
 ### Core DAP landing zone (level 3)
+
+Once the previous steps have been completed, the deployment of the lightweight enterprise scaffold to execute the DAP example landingzones is ready and you can step to one of the examples.
 
 | DAP landing zone example                                                                          | Description                                                |
 |---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
