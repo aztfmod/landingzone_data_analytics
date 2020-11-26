@@ -31,7 +31,7 @@ Once those steps are completed, you will be able to run the DAP landing zones:
 
 ### Authenticate to your development environment
 
-We assume that at this step, you have cloned the AKS landing zones repository (this repo) on your machine and have opened it into Visual Studio Code development environment.
+We assume that at this step, you have cloned the Data Analytics landing zones repository (this repo) on your machine and have opened it into Visual Studio Code development environment.
 
 Once into the development environment, please use the following steps:
 
@@ -99,7 +99,7 @@ This deployment adds the following components:
 <!-- ### Apply network spoke (level 3)
 
 ```bash
-# Deploy networking spoke for AKS
+# Deploy networking spoke for Data Analytics Platform (DAP)
 export example="102-aml-workspace-compute"
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
       -var-file /tf/caf/landingzone_data_analytics/examples/azure_machine_learning/${example}/networking_spoke.tfvars \
