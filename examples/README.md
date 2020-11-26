@@ -16,10 +16,11 @@ For a review of the hierarchy approach of Cloud Adoption Framework for Azure lan
 
 | DAP landing zone example                                                                                              | Description                                                |
 |---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
-| [101-single-cluster](./aks/101-single-cluster)| Provision single AKS cluster within open virtual network |
-| [102-multi-nodepools](./aks/102-multi-nodepools)| Provision single AKS cluster with multiple node pool within separate subnet (1 open virtual network). |
-| [103-multi-clusters](./aks/103-multi-clusters)| Provision multiple AKS clusters in separate regions, using availability zones.                     |
-| [104-private-cluster](./aks/104-private-cluster)| Provision private AKS clusters within private virtual network with Hub & Spoke UDR to Azure Firewall |
+| [101-single-cluster](./databricks/101-simple-cluster)| Provision simple databricks cluster |
+| [101-aml-workspace](./machine_learning/101-aml-workspace)| Provision simple machine learning workspace |
+| [102-aml-workspace-compute](./machine_learning/103-multi-clusters102-aml-workspace-compute)| Provision machine learning workspace with compute instance                   |
+| [101-synapse-workspace](./synapse_analytics/101-synapse-workspace)| Provision simple Synapse workspace with serverless compute |
+| [102-synapse-workspace-pool](./synapse_analytics/102-synapse-workspace-pool)| Provision Synapse workspace with dedicated SQL pool and Spark pool |
 
 
 ## Setting up your test environment
