@@ -5,6 +5,8 @@
 | resource group             | Resource group   | resource group to host the cluster and the compute resources |
 | Machine Learning Workspace | Workspace        | machine learning workspace                                   |
 
+Please refer here for [architecture diagram](https://github.com/aztfmod/landingzone_data_analytics/tree/0.4/examples/machine_learning)
+
 ## Deploying this example
 
 Ensure the below is set prior to apply or destroy.
