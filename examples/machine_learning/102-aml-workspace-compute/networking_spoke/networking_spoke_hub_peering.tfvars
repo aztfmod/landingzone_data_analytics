@@ -87,7 +87,7 @@ vnet_peerings = {
     }
     to = {
       lz_key   = "networking_hub"
-      vnet_key = "hub_rg1"
+      vnet_key = "hub_re1"
     }
     allow_virtual_network_access = true
     allow_forwarded_traffic      = false
@@ -99,7 +99,7 @@ vnet_peerings = {
     name = "hub_rg1_TO_spoke_dap_re1"
     from = {
       lz_key   = "networking_hub"
-      vnet_key = "hub_rg1"
+      vnet_key = "hub_re1"
     }
     to = {
       vnet_key = "spoke_dap_re1"

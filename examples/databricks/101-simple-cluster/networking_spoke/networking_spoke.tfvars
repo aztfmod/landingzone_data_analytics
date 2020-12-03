@@ -78,9 +78,8 @@ vnet_peerings = {
       vnet_key = "vnet_spoke_data_re1"
     }
     to = {
-      lz_key     = "networking_hub"
-      output_key = "vnets"
-      vnet_key   = "hub_re1"
+      lz_key   = "networking_hub"
+      vnet_key = "hub_re1"
     }
     allow_virtual_network_access = true
     allow_forwarded_traffic      = false
@@ -91,9 +90,8 @@ vnet_peerings = {
   hub_re1_TO_vnet_spoke_data_re1 = {
     name = "hub_re1_TO_vnet_spoke_data_re1"
     from = {
-      lz_key     = "networking_hub"
-      output_key = "vnets"
-      vnet_key   = "hub_re1"
+      lz_key   = "networking_hub"
+      vnet_key = "hub_re1"
     }
     to = {
       vnet_key = "vnet_spoke_data_re1"
