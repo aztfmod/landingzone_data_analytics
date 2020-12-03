@@ -10,7 +10,7 @@ landingzone = {
     }
     networking_spoke_databricks = {
       level   = "current"
-      tfstate = "networking_spoke_databricks.tfstate"
+      tfstate = "networking_spoke_data_analytics.tfstate"
     }
   }
 }

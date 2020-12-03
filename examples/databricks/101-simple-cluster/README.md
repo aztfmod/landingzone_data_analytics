@@ -47,29 +47,28 @@ export base_landingzone_tfstate_name="databricks_workspace.tfstate"
 # Deploy the spoke virtual network for Databricks
 
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
-      -var-file /tf/caf/landingzone_data_analytics/examples/databricks/${example}/networking_spoke/networking_spoke.tfvars \
-      -tfstate networking_spoke_databricks.tfstate \
+      -var-folder /tf/caf/examples/databricks/${example}/networking_spoke \
+      -tfstate networking_spoke_data_analytics.tfstate \
       -env ${environment} \
 	-level level3 \
       -a [plan|apply|destroy]
-      
+
 # Deploy Azure services for Databricks workspace
-rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/databricks/${example}/databricks.tfvars \
+rover -lz /tf/caf \
+      -var-folder /tf/caf/examples/databricks/${example} \
       -tfstate ${base_landingzone_tfstate_name}.tfstate \
       -env ${environment} \
-	-level level3 \
+      -level level3 \
       -a [plan|apply|destroy]
-      
+
 # Configure the Databricks cluster with the databricks provider
-rover -lz /tf/caf/landingzone_data_analytics/add-ons/databricks \
-      -var-file /tf/caf/landingzone_data_analytics/examples/databricks/${example}/databricks.tfvars \
+rover -lz /tf/caf/add-ons/databricks \
+      -var-folder /tf/caf/examples/databricks/${example} \
       -tfstate databricks_cluster.tfstate \
       -var tfstate_key=${base_landingzone_tfstate_name}.tfstate \
       -env ${environment} \
 	-level level3 \
       -a [plan|apply|destroy]
-      
 ```
 
 ## Destroy an Databricks landing zone deployment

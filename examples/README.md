@@ -29,7 +29,7 @@ Once into the development environment, please use the following steps:
 rover login -t [TENANT_ID/TENANT_NAME] -s [SUBSCRIPTION_GUID]
 # Environment is needed to be defined, otherwise the below LZs will land into sandpit which someone else is working on
 export environment=[your_environment_name]
-git clone -b 2010.0.0 https://github.com/Azure/caf-terraform-landingzones.git /tf/caf/public
+git clone -b 2010.0.2 https://github.com/Azure/caf-terraform-landingzones.git /tf/caf/public
 
 ```
 
@@ -85,7 +85,7 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
 This deployment adds the following components:
 ![caf_layers](https://raw.githubusercontent.com/aztfmod/landingzone_aks/master/_pictures/examples/101-multi-region-hub.png)
 
-### Apply network spoke (level 3)
+<!-- ### Apply network spoke (level 3)
 
 ```bash
 # Deploy networking spoke for Data Analytics Platform (DAP)
@@ -96,7 +96,7 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
       -env ${environment} \
 	    -level level3 \
   -a [plan|apply|destroy]
-```
+``` -->
 
 ### Core DAP landing zone (level 3)
 
