@@ -39,8 +39,8 @@ machine_learning_workspaces = {
         sshAccess             = "Enabled"
         adminUserSshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAABADAQABAAACAQC1"
         lz_key                = "networking_spoke_dap"
-        vnet_key              = "dap_spoke_re1"
-        subnet_key            = "MachineLearningSubnet"
+        vnet_key              = "spoke_dap_re1"
+        subnet_key            = "Subnet_ml"
       }
     }
   }
