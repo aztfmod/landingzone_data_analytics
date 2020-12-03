@@ -184,7 +184,7 @@ jobs:
       base_landingzone_tfstate_name: "databricks_workspace.tfstate"
       networking_spoke_tfstate_name: "networking_spoke_data_analytics.tfstate"
       databricks_cluster_tfstate_name: "databricks.tfstate"
-      example: "101-simple_cluster"
+      example: "101-simple-cluster"
 
 
     container:
