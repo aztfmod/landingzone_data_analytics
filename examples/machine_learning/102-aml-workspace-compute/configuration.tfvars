@@ -29,7 +29,7 @@ machine_learning_workspaces = {
     keyvault_key             = "aml_secrets"
     storage_account_key      = "amlstorage_re1"
     application_insights_key = "ml_app_insight"
-    #sku_name                 = "Enterprise" # Enterprise will retire in 2021 & Basic will have all features included
+    sku_name                 = "Enterprise" # Enterprise will retire in 2021 & Basic will have all features included
 
     compute_instances = {
       compute_instance_re1 = {
