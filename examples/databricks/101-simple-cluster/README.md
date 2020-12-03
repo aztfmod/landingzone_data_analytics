@@ -71,18 +71,3 @@ rover -lz /tf/caf/add-ons/databricks \
       -a [plan|apply|destroy]
 ```
 
-## Destroy an Databricks landing zone deployment
-
-Have fun playing with the landing zone an once you are done, you can simply delete the deployment using:
-
-```bash
-# Set the folder name of this example
-example=101-single-cluster
-
-rover -lz /tf/caf/landingzone_data_analytics/databricks \
-      -var-file /tf/caf/examples/databricks/${example}/databricks.tfvars \
-      -tfstate ${base_landingzone_tfstate_name} \
-       -env ${environment} \
-       -level level3 \
-       -a destroy -auto-approve
-```
