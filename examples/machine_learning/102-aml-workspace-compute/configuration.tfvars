@@ -9,7 +9,7 @@ landingzone = {
       level   = "lower"
       tfstate = "caf_shared_services.tfstate"
     }
-    networking_spoke_dap = {
+    networking_spoke_aml = {
       level   = "current"
       tfstate = "networking_spoke_aml.tfstate"
     }
@@ -38,7 +38,7 @@ machine_learning_workspaces = {
         adminUserName         = "azureuser"
         sshAccess             = "Enabled"
         adminUserSshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAABADAQABAAACAQC1"
-        lz_key                = "networking_spoke_dap"
+        lz_key                = "networking_spoke_aml"
         vnet_key              = "spoke_dap_re1"
         subnet_key            = "Subnet_ml"
       }
