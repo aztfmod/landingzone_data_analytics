@@ -11,7 +11,7 @@ landingzone = {
     }
     networking_spoke_dap = {
       level   = "current"
-      tfstate = "networking_spoke_data_analytics.tfstate"
+      tfstate = "networking_spoke_aml.tfstate"
     }
   }
 }
@@ -30,7 +30,7 @@ machine_learning_workspaces = {
     storage_account_key      = "amlstorage_re1"
     application_insights_key = "ml_app_insight"
     #sku_name                 = "Enterprise" # Enterprise will retire in 2021 & Basic will have all features included
-       
+
     compute_instances = {
       compute_instance_re1 = {
         computeInstanceName   = "inst25"

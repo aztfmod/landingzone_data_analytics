@@ -182,7 +182,7 @@ jobs:
 
     env:
       base_landingzone_tfstate_name: "databricks_workspace.tfstate"
-      networking_spoke_tfstate_name: "networking_spoke_data_analytics.tfstate"
+      networking_spoke_tfstate_name: "networking_spoke_databricks.tfstate"
       databricks_cluster_tfstate_name: "databricks.tfstate"
       example: "101-simple-cluster"
 
@@ -327,7 +327,7 @@ jobs:
     needs: [networking_hub, shared_services]
 
     env:
-      networking_spoke_tfstate_name: "networking_spoke_data_analytics.tfstate"
+      networking_spoke_tfstate_name: "networking_spoke_aml.tfstate"
       example: "102-aml-workspace-compute"
 
     container:

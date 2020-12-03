@@ -1,9 +1,8 @@
-
 landingzone = {
   backend_type        = "azurerm"
   global_settings_key = "shared_services"
   level               = "level3"
-  key                 = "networking_spoke_dap"
+  key                 = "networking_spoke_aml"
   tfstates = {
     shared_services = {
       level   = "lower"
