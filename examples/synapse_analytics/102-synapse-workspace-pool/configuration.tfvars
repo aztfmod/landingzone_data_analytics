@@ -13,11 +13,8 @@ landingzone = {
 
 resource_groups = {
   dap_synapse_re1 = {
-    name = "synapse-rg1"
+    name = "dap-synapse"
   }
-  # dap_azure_ml_re1 = {
-  #   name = "azure-ml"
-  # }
 }
 
 synapse_workspaces = {
@@ -26,7 +23,7 @@ synapse_workspaces = {
     resource_group_key      = "dap_synapse_re1"
     sql_administrator_login = "dbadmin"
     # sql_administrator_login_password = "<string password>"   # If not set use module autogenerate a strong password and stores it in the keyvault
-    keyvault_key = "secrets"
+    keyvault_key = "synapse_secrets"
     data_lake_filesystem = {
       storage_account_key = "synapsestorage_re1"
       container_key       = "synaspe_filesystem"
@@ -57,7 +54,9 @@ synapse_workspaces = {
         auto_pause = {
           delay_in_minutes = 15
         }
-        tags = "Production"
+        tags = {
+          environment = "Production"
+        }
       }
     }
   }
@@ -85,11 +84,20 @@ storage_accounts = {
 }
 
 keyvaults = {
-  secrets = {
-    name                = "secrets"
+  synapse_secrets = {
+    name                = "synapsesecrets"
     resource_group_key  = "dap_synapse_re1"
     sku_name            = "premium"
     soft_delete_enabled = true
+
+    creation_policies = {
+      logged_in_user = {
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      logged_in_aad_app = {
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+    }
 
     # you can setup up to 5 profiles
     # diagnostic_profiles = {
@@ -102,42 +110,10 @@ keyvaults = {
   }
 }
 
-keyvault_access_policies = {
-  secrets = {
-    logged_in_user = {
-      secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
-    }
-    logged_in_aad_app = {
-      secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
-    }
-    # dap_admins = {
-    #   azuread_group_key  = "dap_admins"
-    #   secret_permissions = ["Get", "List"]
-    # }
-  }
-}
-
 
 #
 # IAM
 #
-/* azuread_groups = {
-  dap_admins = {
-    name        = "dap-admins"
-    description = "Provide access to the Data Analytics Platform services and the jumpbox Keyvault secret."
-    members = {
-      user_principal_names = [
-      ]
-      group_names = []
-      object_ids  = []
-      group_keys  = []
-
-      service_principal_keys = [
-      ]
-    }
-    prevent_duplicate_name = false
-  }
-} */
 
 role_mapping = {
   built_in_role_mapping = {
