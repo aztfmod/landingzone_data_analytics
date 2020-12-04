@@ -24,27 +24,14 @@ export environment=[YOUR_ENVIRONMENT]
 
 ```bash
 # Set the folder name - for workspace with dedicated spark or sql pool
-export example="102-synapse-workspace-pool"   
+export example="102-synapse-workspace-pool"
 
-	  
-rover -lz /tf/caf/landingzone_data_analytics \
-      -var-folder /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example} \
+
+rover -lz /tf/caf \
+      -var-folder /tf/caf/examples/synapse_analytics/${example}/configuration.tfvars \
       -tfstate synapse_analytics.tfstate \
       -env ${environment} \
 	  -level level3 \
-      -a [plan|apply]
-      
-```
+      -a [plan|apply|destroy]
 
-## Destroy an DAP landing zone deployment
-
-Have fun playing with the landing zone an once you are done, you can simply delete the deployment using:
-
-```bash       
-rover -lz /tf/caf/landingzone_data_analytics \
-      -var-folder /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example} \
-      -tfstate synapse_analytics.tfstate \
-      -env ${environment} \
-	  -level level3 \
-      -a destroy -auto-approve     
 ```

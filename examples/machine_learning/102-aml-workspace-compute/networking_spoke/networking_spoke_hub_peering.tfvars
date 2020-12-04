@@ -10,7 +10,7 @@ landingzone = {
     }
     networking_hub = {
       level   = "lower"
-      tfstate = "caf_networking.tfstate"
+      tfstate = "networking_hub.tfstate"
     }
   }
 }

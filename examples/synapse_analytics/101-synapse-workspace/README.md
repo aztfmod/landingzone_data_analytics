@@ -22,26 +22,13 @@ export environment=[YOUR_ENVIRONMENT]
 
 ```bash
 # Set the folder name - for simple workspace with serverless compute
-export example="101-synapse-workspace"   
-	  
+export example="101-synapse-workspace"
+
 rover -lz /tf/caf/landingzone_data_analytics \
       -var-folder /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example} \
       -tfstate synapse_analytics.tfstate \
       -env ${environment} \
-	  -level level3 \
-      -a [plan|apply]
-      
-```
+	-level level3 \
+      -a [plan|apply|destroy]
 
-## Destroy an DAP landing zone deployment
-
-Have fun playing with the landing zone an once you are done, you can simply delete the deployment using:
-
-```bash       
-rover -lz /tf/caf/landingzone_data_analytics \
-      -var-folder /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example} \
-      -tfstate synapse_analytics.tfstate \
-      -env ${environment} \
-	  -level level3 \
-      -a destroy -auto-approve     
 ```

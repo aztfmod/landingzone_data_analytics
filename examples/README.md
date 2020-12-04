@@ -51,7 +51,7 @@ rover -lz /tf/caf/public/landingzones/caf_foundations \
   -env ${environment} \
   -a [plan|apply|destroy]
 
-# Deploy shared_services typically monitoring, site recovery services, azure image gallery. In this example we dont deploy anything but it will expose the Terraform state to level 3 landing zones, so is required.
+# Deploy shared_services typically monitoring, site recovery services, azure image gallery. In this example we don't deploy anything but it will expose the Terraform state to level 3 landing zones, so is required.
 rover -lz /tf/caf/public/landingzones/caf_shared_services/ \
   -tfstate caf_shared_services.tfstate \
   -parallelism 30 \
@@ -85,29 +85,16 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
 This deployment adds the following components:
 ![caf_layers](https://raw.githubusercontent.com/aztfmod/landingzone_aks/master/_pictures/examples/101-multi-region-hub.png)
 
-<!-- ### Apply network spoke (level 3)
-
-```bash
-# Deploy networking spoke for Data Analytics Platform (DAP)
-export example="102-aml-workspace-compute"
-rover -lz /tf/caf/public/landingzones/caf_networking/ \
-      -var-file /tf/caf/landingzone_data_analytics/examples/azure_machine_learning/${example}/networking_spoke.tfvars \
-      -tfstate networking_spoke_data_analytics.tfstate \
-      -env ${environment} \
-	    -level level3 \
-  -a [plan|apply|destroy]
-``` -->
+Once those components are deployed, head to the example folders as below.
 
 ### Core DAP landing zone (level 3)
 
 Once the previous steps have been completed, the deployment of the lightweight enterprise scaffold to execute the DAP example landingzones is ready and you can step to one of the examples.
 
-| DAP landing zone example                                                                          | Description                                                |
-|---------------------------------------------------------------------------------------------------|------------------------------------------------------------|
-| [101-single-cluster](./databricks/101-simple-cluster)| Provision simple databricks cluster |
-| [101-aml-workspace](./machine_learning/101-aml-workspace)| Provision simple machine learning workspace |
-| [102-aml-workspace-compute](./machine_learning/102-aml-workspace-compute)| Provision machine learning workspace with compute instance                   |
-| [101-synapse-workspace](./synapse_analytics/101-synapse-workspace)| Provision simple Synapse workspace with serverless compute |
-| [102-synapse-workspace-pool](./synapse_analytics/102-synapse-workspace-pool)| Provision Synapse workspace with dedicated SQL pool and Spark pool |
-
-
+| DAP landing zone example                                                     | Description                                                        |
+|------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| [101-single-cluster](./databricks/101-simple-cluster)                        | Provision simple databricks cluster                                |
+| [101-aml-workspace](./machine_learning/101-aml-workspace)                    | Provision simple machine learning workspace                        |
+| [102-aml-workspace-compute](./machine_learning/102-aml-workspace-compute)    | Provision machine learning workspace with compute instance         |
+| [101-synapse-workspace](./synapse_analytics/101-synapse-workspace)           | Provision simple Synapse workspace with serverless compute         |
+| [102-synapse-workspace-pool](./synapse_analytics/102-synapse-workspace-pool) | Provision Synapse workspace with dedicated SQL pool and Spark pool |

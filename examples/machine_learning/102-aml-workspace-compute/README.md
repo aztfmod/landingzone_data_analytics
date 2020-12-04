@@ -27,20 +27,21 @@ export environment=[YOUR_ENVIRONMENT]
 # Set the folder name of this example
 export example="102-aml-workspace-compute"
 
+# Deploy the spoke virtual network for AML
+
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
-      -var-folder /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/networking_spoke \
+      -var-folder /tf/caf/examples/machine_learning/${example}/networking_spoke \
       -tfstate networking_spoke_aml.tfstate \
       -env ${environment} \
-	  -level level3 \
-      -a [plan|apply]
+	-level level3 \
+      -a [plan|apply|destroy]
 
-rover -lz /tf/caf/landingzone_data_analytics \
+rover -lz /tf/caf \
       -var-folder /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
       -tfstate machine_learning_102.tfstate \
-      -env ${environment} \
-	  -level level3 \
-      -a [plan|apply]
-
+	-env ${environment} \
+      -level level3 \
+      -a [plan|apply|destroy]
 ```
 
 ## Destroy Machine Learning Workspace
@@ -51,7 +52,7 @@ To destroy the componenets you can run below command
 # Set the folder name of this example
 export example="102-aml-workspace-compute"
 
-rover -lz /tf/caf/landingzone_data_analytics \
+rover -lz /tf/caf \
       -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
       -tfstate machine_learning_102.tfstate \
 	-env ${environment} \
