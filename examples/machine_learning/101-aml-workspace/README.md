@@ -25,7 +25,7 @@ export environment=[YOUR_ENVIRONMENT]
 export example="101-aml-workspace"
 
 rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
+      -var-folder /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
       -tfstate machine_learning_101.tfstate \
 	-env ${environment} \
       -level level3 \
@@ -41,7 +41,7 @@ To destroy the componenets you can run below command
 export example="101-aml-workspace"
 
 rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
+      -var-folder /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
       -tfstate machine_learning_101.tfstate \
 	-env ${environment} \
       -level level3 \

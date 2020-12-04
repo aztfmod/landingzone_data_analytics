@@ -27,12 +27,20 @@ export environment=[YOUR_ENVIRONMENT]
 # Set the folder name of this example
 export example="102-aml-workspace-compute"
 
-rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
-      -tfstate machine_learning_102.tfstate \
-	-env ${environment} \
-      -level level3 \
+rover -lz /tf/caf/public/landingzones/caf_networking/ \
+      -var-folder /tf/caf/landingzone_data_analytics/examples/machine_learning/${example}/networking_spoke \
+      -tfstate networking_spoke_aml.tfstate \
+      -env ${environment} \
+	  -level level3 \
       -a [plan|apply]
+
+rover -lz /tf/caf/landingzone_data_analytics \
+      -var-folder /tf/caf/landingzone_data_analytics/examples/machine_learning/${example} \
+      -tfstate machine_learning_102.tfstate \
+      -env ${environment} \
+	  -level level3 \
+      -a [plan|apply]
+
 ```
 
 ## Destroy Machine Learning Workspace

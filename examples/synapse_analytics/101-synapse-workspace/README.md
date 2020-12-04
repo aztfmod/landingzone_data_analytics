@@ -25,7 +25,7 @@ export environment=[YOUR_ENVIRONMENT]
 export example="101-synapse-workspace"   
 	  
 rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example}/configuration.tfvars \
+      -var-folder /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example} \
       -tfstate synapse_analytics.tfstate \
       -env ${environment} \
 	  -level level3 \
@@ -39,7 +39,7 @@ Have fun playing with the landing zone an once you are done, you can simply dele
 
 ```bash       
 rover -lz /tf/caf/landingzone_data_analytics \
-      -var-file /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example}/configuration.tfvars \
+      -var-folder /tf/caf/landingzone_data_analytics/examples/synapse_analytics/${example} \
       -tfstate synapse_analytics.tfstate \
       -env ${environment} \
 	  -level level3 \
