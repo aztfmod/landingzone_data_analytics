@@ -1,35 +1,26 @@
 # Map of the remote data state for lower level
-variable lowerlevel_storage_account_name {}
-variable lowerlevel_container_name {}
-variable lowerlevel_key {}
-variable lowerlevel_resource_group_name {}
+variable lower_storage_account_name {}
+variable lower_container_name {}
+#variable lower_key {}
+variable lower_resource_group_name {}
 
 variable tfstate_storage_account_name {}
 variable tfstate_container_name {}
 variable tfstate_key {}
 variable tfstate_resource_group_name {}
 
-variable tfstates {
-  default = {
-    caf_foundations = {
-      tfstate = "caf_foundations.tfstate"
-    }
-    networking = {
-      tfstate = "caf_foundations.tfstate"
-    }
-  }
-}
-
 variable global_settings {
   default = {}
 }
 
-variable landingzone_name {
-  default = "appservices"
+variable landingzone {
+  default = {}
 }
-variable level {
-  default = "level3"
+
+variable tenant_id {
+  default = {}
 }
+
 variable environment {
   default = "sandpit"
 }
@@ -112,7 +103,7 @@ variable private_dns {
 variable synapse_workspaces {
   default = {}
 }
-variable application_insights {
+variable azurerm_application_insights {
   default = {}
 }
 variable role_mapping {

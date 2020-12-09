@@ -1,0 +1,570 @@
+#
+# Copyright (c) Microsoft Corporation
+# Licensed under the MIT License.
+#
+
+name: landingzone_data_analytics_100
+
+on:
+  pull_request:
+    paths-ignore:
+      - .github/workflows/master-200.yaml
+      - 'documentation/**'
+      - '_pictures/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+  push:
+    paths-ignore:
+      - .github/workflows/master-200.yaml
+      - 'documentation/**'
+      - '_pictures/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+  schedule:
+    - cron:  '0 3 * * *'
+
+env:
+  TF_CLI_ARGS: '-no-color'
+  TF_CLI_ARGS_destroy: '-auto-approve -refresh=false'
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  random_length: '5'
+
+jobs:
+
+  tfsec:
+    name: Run TFsec
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Terraform security scan
+        uses: triat/terraform-security-scan@v2.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  checkov:
+    name: checkov-action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          quiet: true
+          framework: terraform
+
+  foundations:
+    name: foundations
+    runs-on: ubuntu-latest
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+
+      - name: launchpad
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_launchpad -a apply \
+            -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_launchpad/scenario/100 \
+            -level level0 \
+            -launchpad \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var random_length=${{ env.random_length }}' \
+            '-var prefix=g${{ github.run_id }}' \
+            '-var tags={testing_job_id="${{ github.run_id }}"}'
+
+      - name: foundations
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_foundations -a apply \
+            -level level1 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}'
+
+  shared_services:
+    name: shared_services
+    runs-on: ubuntu-latest
+
+    needs: foundations
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+
+      - name: shared_services
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services -a apply \
+            -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services/scenario/100 \
+            -tfstate caf_shared_services.tfstate \
+            -level level2 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}'
+
+  networking_hub:
+    name: networking_hub
+    runs-on: ubuntu-latest
+
+    needs: foundations
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+
+      - name: networking_hub
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a apply \
+            -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_networking/scenario/101-multi-region-hub \
+            -tfstate networking_hub.tfstate \
+            -level level2 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}'
+
+  databricks:
+    name: databricks
+    runs-on: ubuntu-latest
+
+    needs: [networking_hub, shared_services]
+
+    env:
+      base_landingzone_tfstate_name: "databricks_workspace.tfstate"
+      networking_spoke_tfstate_name: "networking_spoke_databricks.tfstate"
+      databricks_cluster_tfstate_name: "databricks.tfstate"
+      example: "101-simple-cluster"
+
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: deploy networking_spoke
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a apply \
+            -level level3 \
+            -tfstate ${{ env.networking_spoke_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }}/networking_spoke \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+      - name: deploy databricks_workspace
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
+            -level level3 \
+            -tfstate ${{ env.base_landingzone_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+      - name: deploy databricks_cluster
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/add-ons/databricks -a apply \
+            -level level3 \
+            -tfstate ${{ env.databricks_cluster_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
+            -var tfstate_key=${{ env.base_landingzone_tfstate_name }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+      - name: destroy databricks_cluster
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/add-ons/databricks -a destroy \
+            -level level3 \
+            -tfstate ${{ env.databricks_cluster_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
+            -var tfstate_key=${{ env.base_landingzone_tfstate_name }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+      - name: destroy databricks_workspace
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
+            -level level3 \
+            -tfstate ${{ env.base_landingzone_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+      - name: destroy networking_spoke
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a destroy \
+            -level level3 \
+            -tfstate ${{ env.networking_spoke_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/databricks/${{ env.example }}/networking_spoke \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+  synapse_analytics:
+    name: synapse_analytics
+    runs-on: ubuntu-latest
+
+    needs: [networking_hub, shared_services]
+
+    strategy:
+      fail-fast: false
+      matrix:
+          example: [
+            "101-synapse-workspace",
+            "102-synapse-workspace-pool"
+          ]
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: deploy synapse_analytics
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
+            -level level3 \
+            -tfstate ${{ matrix.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/synapse_analytics/${{ matrix.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+
+      - name: destroy synapse_analytics
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
+            -level level3 \
+            -tfstate ${{ matrix.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/synapse_analytics/${{ matrix.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+  machine_learning_102_aml_workspace_compute:
+    name: machine_learning_102_aml_workspace_compute
+    runs-on: ubuntu-latest
+
+    needs: [networking_hub, shared_services]
+
+    env:
+      networking_spoke_tfstate_name: "networking_spoke_aml.tfstate"
+      example: "102-aml-workspace-compute"
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: deploy networking_spoke
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a apply \
+            -level level3 \
+            -tfstate ${{ env.networking_spoke_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/machine_learning/${{ env.example }}/networking_spoke \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+      - name: deploy machine_learning_workspace
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
+            -level level3 \
+            -tfstate ${{ env.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/machine_learning/${{ env.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+      - name: destroy machine_learning_workspace
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
+            -level level3 \
+            -tfstate ${{ env.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/machine_learning/${{ env.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+      - name: destroy networking_spoke
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a destroy \
+            -level level3 \
+            -tfstate ${{ env.networking_spoke_tfstate_name }} \
+            -var-folder ${GITHUB_WORKSPACE}/examples/machine_learning/${{ env.example }}/networking_spoke \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+  machine_learning_101_aml_workspace:
+    name: machine_learning_101_aml_workspace
+    runs-on: ubuntu-latest
+
+    needs: [networking_hub, shared_services]
+
+    env:
+      example: "101-aml-workspace"
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: deploy machine_learning_workspace
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a apply \
+            -level level3 \
+            -tfstate ${{ env.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/machine_learning/${{ env.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }}
+
+      - name: destroy machine_learning_workspace
+        if: always()
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE} -a destroy \
+            -level level3 \
+            -tfstate ${{ env.example }}.tfstate \
+            -var-folder ${GITHUB_WORKSPACE}/examples/machine_learning/${{ env.example }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            --environment ${{ github.run_id }} \
+            -auto-approve
+
+  destroy_shared_services:
+    name: destroy_shared_services
+    runs-on: ubuntu-latest
+    if: always()
+
+    needs: [databricks, synapse_analytics, machine_learning_102_aml_workspace_compute, machine_learning_101_aml_workspace]
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+
+      - name: destroy_shared_services
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services -a destroy \
+            -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_shared_services/scenario/100 \
+            -level level2 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            -auto-approve
+
+
+  destroy_networking_hub:
+    name: destroy_networking_hub
+    runs-on: ubuntu-latest
+    if: always()
+
+    needs: [databricks, synapse_analytics, machine_learning_102_aml_workspace_compute, machine_learning_101_aml_workspace]
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: '2010.0.2'
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+
+      - name: destroy_networking_hub
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_networking -a destroy \
+            -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_networking/scenario/101-multi-region-hub \
+            -level level2 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            -auto-approve
+
+  destroy_foundations:
+    name: destroy_foundations
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [destroy_shared_services, destroy_networking_hub]
+
+    container:
+      image: aztfmod/rover:2010.2808
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: Azure/caf-terraform-landingzones
+          path: public
+          ref: "2010.0.2"
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+
+      - name: destroy foundations
+        run: |
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_foundations -a destroy \
+            -level level1 \
+            -parallelism=30 \
+            --environment ${{ github.run_id }} \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            -auto-approve
+
+      - name: destroy launchpad
+        run: |
+
+          /tf/rover/rover.sh -lz ${GITHUB_WORKSPACE}/public/landingzones/caf_launchpad/ -a destroy \
+            -level level0 \
+            -var-folder ${GITHUB_WORKSPACE}/public/landingzones/caf_launchpad/scenario/100 \
+            -launchpad \
+            --environment ${{ github.run_id }} \
+            -parallelism=30 \
+            '-var prefix=g${{ github.run_id }}' \
+            '-var tags={testing_job_id="${{ github.run_id }}"}' \
+            -auto-approve
+
+
+      - name: Complete purge
+        if: ${{ always() }}
+        run: |
+          for i in `az monitor diagnostic-settings subscription list -o tsv --query "value[?contains(name, '${{ github.run_id }}' )].name"`; do echo "purging subscription diagnostic-settings: $i" && $(az monitor diagnostic-settings subscription delete --name $i --yes); done
+          for i in `az monitor log-profiles list -o tsv --query '[].name'`; do az monitor log-profiles delete --name $i; done
+          for i in `az ad group list --query "[?contains(displayName, '${{ github.run_id }}')].objectId" -o tsv`; do echo "purging Azure AD group: $i" && $(az ad group delete --verbose --group $i || true); done
+          for i in `az ad app list --query "[?contains(displayName, '${{ github.run_id }}')].appId" -o tsv`; do echo "purging Azure AD app: $i" && $(az ad app delete --verbose --id $i || true); done
+          for i in `az keyvault list-deleted --query "[?tags.environment=='${{ github.run_id }}'].name" -o tsv`; do az keyvault purge --name $i; done
+          for i in `az group list --query "[?tags.environment=='${{ github.run_id }}'].name" -o tsv`; do echo "purging resource group: $i" && $(az group delete -n $i -y --no-wait || true); done
+          for i in `az role assignment list --query "[?contains(roleDefinitionName, '${{ github.run_id }}')].roleDefinitionName" -o tsv`; do echo "purging role assignment: $i" && $(az role assignment delete --role $i || true); done
+          for i in `az role definition list --query "[?contains(roleName, '${{ github.run_id }}')].roleName" -o tsv`; do echo "purging custom role definition: $i" && $(az role definition delete --name $i || true); done

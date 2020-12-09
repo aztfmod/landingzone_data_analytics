@@ -1,10 +1,10 @@
 ## declare here the resources for your landing zone
 
 module "caf" {
-#   source  = "aztfmod/caf-enterprise-scale/azurerm"
-#   version = "~>0.2"
-  source  = "github.com/aztfmod/terraform-azurerm-caf?ref=0.4"
+  source  = "aztfmod/caf/azurerm"
+  version = "0.4.19"
 
+  current_landingzone_key     = var.landingzone.key
   tfstates                    = local.tfstates
   tags                        = local.tags
   global_settings             = local.global_settings
@@ -19,6 +19,7 @@ module "caf" {
   keyvault_access_policies    = var.keyvault_access_policies
   managed_identities          = var.managed_identities
   role_mapping                = var.role_mapping
+  tenant_id                   = var.tenant_id
   compute = {
     virtual_machines           = var.virtual_machines
     bastion_hosts              = var.bastion_hosts
@@ -32,16 +33,16 @@ module "caf" {
     private_dns                       = var.private_dns
   }
   database = {
-    azurerm_redis_caches  = var.azurerm_redis_caches
-    mssql_servers         = var.mssql_servers
-    synapse_workspaces    = var.synapse_workspaces
-    databricks_workspaces = var.databricks_workspaces
+    azurerm_redis_caches        = var.azurerm_redis_caches
+    mssql_servers               = var.mssql_servers
+    synapse_workspaces          = var.synapse_workspaces
+    databricks_workspaces       = var.databricks_workspaces
     machine_learning_workspaces = var.machine_learning_workspaces
   }
   webapp = {
-    azurerm_application_insights = var.application_insights
-    # app_service_environments     = try(var.webapp.app_service_environments, {})
-    # app_service_plans            = try(var.webapp.app_service_plans, {})
-    # app_services                 = try(var.webapp.app_services, {})
+    azurerm_application_insights = var.azurerm_application_insights
+  }
+  remote_objects = {
+    vnets = local.remote.vnets
   }
 }

@@ -10,7 +10,7 @@ provider "databricks" {
 }
 
 module databricks {
-  source     = "../../modules/databricks"
+  source = "../../modules/databricks"
 
   settings = var.databricks
 }
