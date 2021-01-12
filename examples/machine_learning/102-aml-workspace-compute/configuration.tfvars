@@ -40,7 +40,7 @@ machine_learning_workspaces = {
         adminUserSshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAABADAQABAAACAQC1"
         lz_key                = "networking_spoke_aml"
         vnet_key              = "spoke_dap_re1"
-        subnet_key            = "Subnet_ml"
+        subnet_key            = "AmlSubnet"
       }
     }
   }
@@ -68,7 +68,7 @@ storage_accounts = {
 
 keyvaults = {
   aml_secrets = {
-    name               = "amlsecrets"
+    name               = "amlsecrets_re1"
     resource_group_key = "dap_azure_ml_re1"
     //convention          = "cafrandom"
     sku_name            = "premium"
