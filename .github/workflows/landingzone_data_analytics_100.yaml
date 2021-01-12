@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -109,7 +109,7 @@ jobs:
     needs: foundations
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -145,7 +145,7 @@ jobs:
     needs: foundations
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -188,7 +188,7 @@ jobs:
 
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -282,7 +282,7 @@ jobs:
           ]
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -331,7 +331,7 @@ jobs:
       example: "102-aml-workspace-compute"
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -398,7 +398,7 @@ jobs:
       example: "101-aml-workspace"
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -443,7 +443,7 @@ jobs:
     needs: [databricks, synapse_analytics, machine_learning_102_aml_workspace_compute, machine_learning_101_aml_workspace]
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -481,7 +481,7 @@ jobs:
     needs: [databricks, synapse_analytics, machine_learning_102_aml_workspace_compute, machine_learning_101_aml_workspace]
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
@@ -517,7 +517,7 @@ jobs:
     needs: [destroy_shared_services, destroy_networking_hub]
 
     container:
-      image: aztfmod/rover:2010.2808
+      image: aztfmod/rover:2012.1109
       options: --user 0
 
     steps:
