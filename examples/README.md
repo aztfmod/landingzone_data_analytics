@@ -69,6 +69,7 @@ The networking hub is part of the core enterprise landing zone services, you can
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
   -tfstate networking_hub.tfstate \
   -var-folder /tf/caf/public/landingzones/caf_networking/scenario/100-single-region-hub \
+  -tfstate networking_hub.tfstate \
   -env ${environment} \
   -level level2 \
   -a [plan|apply|destroy]
@@ -77,6 +78,7 @@ rover -lz /tf/caf/public/landingzones/caf_networking/ \
 rover -lz /tf/caf/public/landingzones/caf_networking/ \
   -tfstate networking_hub.tfstate \
   -var-folder /tf/caf/public/landingzones/caf_networking/scenario/101-multi-region-hub \
+  -tfstate networking_hub.tfstate \
   -env ${environment} \
   -level level2 \
   -a [plan|apply|destroy]
