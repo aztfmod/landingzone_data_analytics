@@ -2,7 +2,7 @@
 
 module "caf" {
   source  = "aztfmod/caf/azurerm"
-  version = "0.4.19"
+  version = "~>5.0"
 
   current_landingzone_key     = var.landingzone.key
   tfstates                    = local.tfstates

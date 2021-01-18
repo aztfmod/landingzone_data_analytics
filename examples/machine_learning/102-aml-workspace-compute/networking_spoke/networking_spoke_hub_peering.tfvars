@@ -16,15 +16,15 @@ landingzone = {
 }
 
 resource_groups = {
-  dap_spoke_re1 = {
-    name   = "dap-vnet"
+  vnet_spoke_re1 = {
+    name   = "vnet-spoke-dap"
     region = "region1"
   }
 }
 
 vnets = {
   spoke_dap_re1 = {
-    resource_group_key = "dap_spoke_re1"
+    resource_group_key = "vnet_spoke_re1"
     region             = "region1"
     vnet = {
       name          = "dap"
@@ -37,28 +37,29 @@ vnets = {
         cidr    = ["100.64.52.0/29"]
         nsg_key = "azure_bastion_nsg"
       }
-      jumpbox = {
-        name              = "jumpbox"
+      JumpboxSubnet = {
+        name              = "JumpboxSubnet"
         cidr              = ["100.64.52.8/29"]
         service_endpoints = ["Microsoft.Storage"]
+        nsg_key           = "empty_nsg"
       }
-      Subnet_storage = {
-        name              = "Datalake"
+      DatalakeStorageSubnet = {
+        name              = "DatalakeStorageSubnet"
         cidr              = ["100.64.53.0/25"]
         service_endpoints = ["Microsoft.Storage"]
-        # nsg_name          = "datalake_nsg"
+        nsg_key           = "empty_nsg"
       }
-      Subnet_ml = {
-        name              = "Ml_Workspace"
+      AmlSubnet = {
+        name              = "AmlSubnet"
         cidr              = ["100.64.53.128/25"]
         service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault"]
-        # nsg_name          = "Ml_Workspace_nsg"
+        nsg_key           = "machine_learning_nsg"
       }
-      Subnet_synapse = {
-        name              = "Synpase_Workspace"
+      SynapseSubnet = {
+        name              = "SynapseSubnet"
         cidr              = ["100.64.54.0/25"]
         service_endpoints = ["Microsoft.Storage"]
-        # nsg_name          = "Synapse_Workspace_nsg"
+        nsg_key           = "empty_nsg"
       }
       private_endpoints = {
         name                                           = "private_endpoints"
@@ -115,7 +116,7 @@ vnet_peerings = {
 bastion_hosts = {
   bastion_re1 = {
     name               = "bastion"
-    resource_group_key = "dap_spoke_re1"
+    resource_group_key = "vnet_spoke_re1"
     vnet_key           = "spoke_dap_re1"
     subnet_key         = "AzureBastionSubnet"
     public_ip_key      = "bastion_host_re1"
@@ -135,7 +136,7 @@ bastion_hosts = {
 public_ip_addresses = {
   bastion_host_re1 = {
     name                    = "bastion-pip1"
-    resource_group_key      = "dap_spoke_re1"
+    resource_group_key      = "vnet_spoke_re1"
     sku                     = "Standard"
     allocation_method       = "Static"
     ip_version              = "IPv4"
