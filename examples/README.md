@@ -29,7 +29,7 @@ Once into the development environment, please use the following steps:
 rover login -t [TENANT_ID/TENANT_NAME] -s [SUBSCRIPTION_GUID]
 # Environment is needed to be defined, otherwise the below LZs will land into sandpit which someone else is working on
 export environment=[your_environment_name]
-git clone -b 2010.0.2 https://github.com/Azure/caf-terraform-landingzones.git /tf/caf/public
+git clone -b 2012.1.0 https://github.com/Azure/caf-terraform-landingzones.git /tf/caf/public
 
 ```
 
